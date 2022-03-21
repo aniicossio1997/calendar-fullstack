@@ -1,6 +1,6 @@
 import React, { LazyExoticComponent } from "react";
 
-type JSXComponent = () => JSX.Element;
+export type JSXComponent = () => JSX.Element;
 type JSXLAZY = () => React.LazyExoticComponent<() => JSX.Element>;
 export interface IRoute {
   to: string;

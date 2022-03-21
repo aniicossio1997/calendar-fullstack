@@ -2,17 +2,29 @@ import { IUSerSimple } from "./IUser";
 
 export interface IEvensCalendar {
   user: IUSerSimple;
-  bgColor?: string;
   title: string;
-  notes: string;
-  dateStart: Date;
-  dateEnd: Date | null;
+  description: string;
+  start: Date;
+  end: Date | null;
 }
 export interface IEvents {
   user: IUSerSimple;
-  bgColor?: string;
   title: string;
-  notes: string;
-  dateStart: Date;
-  dateEnd: Date | null;
+  description: string;
+  start: Date;
+  end: Date | null;
+}
+
+export interface IEventPOST {
+  title: string;
+  description?: string;
+  start: Date;
+  end: Date;
+  user_id: string;
+}
+export interface IEventPUT {
+  title: string;
+  description: string;
+  start: Date;
+  end: Date;
 }
