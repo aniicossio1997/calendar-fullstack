@@ -1,13 +1,13 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import calendarModalReducer from "../features/modal/calendarModalSlice";
-import counterReducer from "../features/counter/counterSlice";
 import eventsCalendar from "../features/calendar/calendarSlice";
+import authSlice from "../features/auth/authSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     modalRedux: calendarModalReducer,
     eventsCalendar: eventsCalendar,
+    authState: authSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

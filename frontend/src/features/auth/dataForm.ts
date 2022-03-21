@@ -29,7 +29,7 @@ export const dataRegister: IDataForm[] = [
   {
     name: "repitPassword",
     type: "text",
-    label: "repit Password",
+    label: "Repit Password",
     Component: PasswordShowHide,
   },
 ];
