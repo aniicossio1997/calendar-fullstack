@@ -3,9 +3,9 @@ import { Schema, Document, model } from "mongoose";
 export type objectID = Schema.Types.ObjectId;
 export interface IEvent extends Document {
   title: string;
-  notes: string;
-  dateStart: Date;
-  dateEnd: Date;
+  description: string;
+  start: Date;
+  end: Date;
   user: Schema.Types.ObjectId;
 }
 const eventSchema = new Schema({
@@ -13,15 +13,15 @@ const eventSchema = new Schema({
     type: String,
     required: true,
   },
-  notes: {
+  description: {
     type: String,
     required: false,
   },
-  dateStart: {
+  start: {
     type: Date,
     required: true,
   },
-  dateEnd: {
+  end: {
     type: Date,
     required: true,
   },
