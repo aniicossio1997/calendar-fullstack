@@ -1,5 +1,12 @@
-import { Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import {
+  Button,
+  Icon,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 import React from "react";
+import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 
 interface IProps {
   name?: string;
@@ -22,7 +29,11 @@ const PasswordShowHide = ({ name, label, ...rest }: IProps) => {
         />
         <InputRightElement width="4.5rem">
           <Button h="1.75rem" size="sm" onClick={handleClick}>
-            {show ? "Hide" : "Show"}
+            {show ? (
+              <Icon as={BsFillEyeFill} h={6} w={6} />
+            ) : (
+              <Icon as={BsFillEyeSlashFill} h={6} w={6} />
+            )}
           </Button>
         </InputRightElement>
       </InputGroup>

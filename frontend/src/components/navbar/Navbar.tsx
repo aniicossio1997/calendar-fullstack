@@ -7,17 +7,33 @@ import {
   useDisclosure,
   useColorModeValue,
   Icon,
+  Link,
+  Text,
 } from "@chakra-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
 import ItemLink from "./ItemLink";
 import { ImMenu, ImCross } from "react-icons/im";
-import { dataRoutes } from "../../routes/routes";
+import { publicDataRoutes } from "../../routes/public.routes";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { privateDataRoutes } from "../../routes/private.routes";
+import { logout } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
+import { Fragment } from "react";
+import { MdLogout } from "react-icons/md";
 
 const Navbar = () => {
+  const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const handleToggle = () => (isOpen ? onClose() : onOpen());
   const [isSmall] = useMediaQuery("(max-width: 780px)");
   const colorValue = useColorModeValue("gray.80", undefined);
+  const islogin = useAppSelector((state) => state.authState.isLogin);
+  const navigate = useNavigate();
+  const closeSesion = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
   return (
     <Box zIndex={999} top={0} position={"sticky"}>
       <Stack
@@ -54,18 +70,22 @@ const Navbar = () => {
             mt={{ base: 6, md: 0 }}
             spacing={6}
           >
-            {dataRoutes.map((route) => (
-              <ItemLink key={route.to} to={route.to} name={route.name} />
-            ))}
-            <Button
-              as="a"
-              target="_blank"
-              variant="solid"
-              colorScheme={"red"}
-              href="https://chakra-ui.com"
-            >
-              Salir
-            </Button>
+            {!islogin &&
+              publicDataRoutes.map((route) => (
+                <ItemLink key={route.to} to={route.to} name={route.name} />
+              ))}
+            {islogin &&
+              privateDataRoutes.map((route) => (
+                <Fragment key={route.to}>
+                  <ItemLink to={route.to} name={route.name} />
+                </Fragment>
+              ))}
+            <Link style={{ textDecoration: "none " }} onClick={closeSesion}>
+              <Stack alignItems="center" color={"inherit"} direction="row">
+                <b>{"SALIR"}</b>
+                <Icon as={MdLogout} h="5" w={"5"} />
+              </Stack>
+            </Link>
           </Stack>
         </Flex>
       </Stack>

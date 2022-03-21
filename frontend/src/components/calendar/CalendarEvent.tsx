@@ -8,13 +8,13 @@ interface IProps {
   event: IEvensCalendar;
 }
 const CalendarEvent = ({ event }: IProps) => {
-  const { title, notes } = event;
+  const { title, description } = event;
   return (
     <div>
       <Heading as="h6" size="xs">
         {title}
       </Heading>
-      <Text fontSize="sm">{notes}</Text>
+      <Text fontSize="sm">{description}</Text>
     </div>
   );
 };

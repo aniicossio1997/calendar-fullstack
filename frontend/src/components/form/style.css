@@ -1,0 +1,4 @@
+input:disabled {
+  opacity: 0.8 !important;
+  background-color: rgb(224, 228, 228);
+}

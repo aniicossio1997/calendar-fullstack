@@ -21,9 +21,7 @@ const CalendarModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef();
   const initialRef = React.useRef(null);
-  const handleStartDateChange = (e: Date) => {
-    console.log(e);
-  };
+  const handleStartDateChange = (e: Date) => {};
   return (
     <>
       <Modal

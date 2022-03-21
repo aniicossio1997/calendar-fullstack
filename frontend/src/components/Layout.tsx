@@ -1,5 +1,7 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
+import { Outlet } from "react-router-dom";
+
 import Navbar from "./navbar/Navbar";
 
 interface LayoutProps {
@@ -7,12 +9,16 @@ interface LayoutProps {
 }
 
 const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
+  const bgContainer = useColorModeValue("gray.50", "gray.800");
+
   return (
     <>
       <Navbar />
-
       <Container paddingY={4} maxWidth={"98%"}>
-        <Box>{children}</Box>
+        <Box>
+          {children}
+          <Outlet />
+        </Box>
       </Container>
     </>
   );

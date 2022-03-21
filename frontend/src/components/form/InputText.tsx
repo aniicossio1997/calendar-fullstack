@@ -1,23 +1,21 @@
 import {
   Box,
-  ComponentWithAs,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
-  InputProps,
-  Text,
   Textarea,
-  TextareaProps,
 } from "@chakra-ui/react";
 import { Field } from "formik";
 import React from "react";
-
+import "./style.css";
 interface Props {
   label: string;
   name: string;
   type?: "text" | "email" | "textarea" | "password" | any;
   isRequired?: boolean;
+  isError?: boolean;
+  isDisabled?: boolean;
   [x: string]: any;
   Component: typeof Input | typeof Textarea | React.ReactChildren;
 }
@@ -29,6 +27,8 @@ export const InputText = ({
   name,
   Component,
   isRequired = true,
+  isError = false,
+  isDisabled = false,
   ...rest
 }: Props) => {
   return (
@@ -41,7 +41,7 @@ export const InputText = ({
             meta,
           }: any) => (
             <>
-              <FormControl isInvalid={meta.touched && meta.error}>
+              <FormControl isInvalid={(meta.touched && meta.error) || isError}>
                 <FormLabel htmlFor={name}>
                   {label}
                   {isRequired && RequiredText()}
@@ -49,11 +49,11 @@ export const InputText = ({
                 <Field
                   {...field}
                   id={name}
-                  component={Component}
+                  as={Component}
                   name={name}
-                  value={field.value || null}
+                  value={field.value || ""}
+                  isDisabled={isDisabled}
                 />
-                {console.log("value", field.value)}
                 <FormErrorMessage>{meta.error}</FormErrorMessage>
               </FormControl>
             </>

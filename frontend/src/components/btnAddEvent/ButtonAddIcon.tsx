@@ -17,45 +17,48 @@ const ButtonAddIcon = ({ handleClick }: IProps) => {
   return (
     <>
       <AnimatePresence>
-        <Flex
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          exit={{ scale: 0 }}
-          bottom={10}
-          position={"sticky"}
-          padding={4}
-          alignItems={"flex-start"}
-          justifyContent={"space-between"}
-          as={motion.div}
-          zIndex={5}
-          direction={activeEvent === null ? "row-reverse" : "row"}
-        >
-          {activeEvent !== null && (
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+          <Flex
+            bottom={10}
+            position={"fixed"}
+            padding={4}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            zIndex={5}
+            justify={"space-around"}
+            float={"left"}
+            direction={activeEvent ? "row" : "row-reverse"}
+            width={{ base: "99%", md: "70%", lg: "75%", xl: "84%" }}
+          >
+            {activeEvent !== null && (
+              <Button
+                className={styles.btnStyles}
+                colorScheme={"red"}
+                rounded={"full"}
+                padding={4}
+                onClick={handleDeleted}
+              >
+                <Icon as={IoMdTrash} h={8} w={8} />
+              </Button>
+            )}
+
             <Button
+              onClick={(e) => handleClick()}
               className={styles.btnStyles}
-              colorScheme={"red"}
+              colorScheme={"blue"}
               rounded={"full"}
               padding={4}
-              onClick={handleDeleted}
+              justifySelf={"flex-end"}
+              marginRight={{ base: 6, md: 10 }}
             >
-              <Icon as={IoMdTrash} h={8} w={8} />
+              <Icon
+                as={activeEvent !== null ? IoMdCreate : IoIosAdd}
+                h={8}
+                w={8}
+              />
             </Button>
-          )}
-
-          <Button
-            onClick={(e) => handleClick()}
-            className={styles.btnStyles}
-            colorScheme={"blue"}
-            rounded={"full"}
-            padding={4}
-          >
-            <Icon
-              as={activeEvent !== null ? IoMdCreate : IoIosAdd}
-              h={8}
-              w={8}
-            />
-          </Button>
-        </Flex>
+          </Flex>
+        </motion.div>
       </AnimatePresence>
     </>
   );

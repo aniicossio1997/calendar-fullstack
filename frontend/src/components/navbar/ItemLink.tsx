@@ -1,5 +1,7 @@
 import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 interface Props {
   to: string;
   name: string;
@@ -7,8 +9,9 @@ interface Props {
 const ItemLink = ({ to, name }: Props) => {
   const { pathname } = useLocation();
   const color = useColorModeValue("pink.500", "pink.200");
+
   return (
-    <Link key={to} to={to}>
+    <Link to={to}>
       <Stack
         alignItems="center"
         color={pathname === to ? color : "inherit"}
