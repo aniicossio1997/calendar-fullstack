@@ -1,18 +1,17 @@
-# calendar-fullstack
+# Calendar-fullstack
 
-## Backend
+### Librerias del Backend:
 
-- mongoose
-- mongoDB
 - node
 - express
 - typescript
+- mongoose
+- mongoDB
 - moment
-
-## Frontend es realizado en React con Typescript
 
 ### Librerias del Frontend:
 
+- React
 - redux | redux-toolkit
 - chakra-ui
 - formik | yup
