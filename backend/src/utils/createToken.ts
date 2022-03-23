@@ -1,0 +1,24 @@
+import jwt from "jsonwebtoken";
+import config from "../config/config";
+
+export const createToken = (id: any, email: string) => {
+  return new Promise((resolve, reject) => {
+    const payload = { id, email };
+
+    jwt.sign(
+      payload,
+      config.jwtSecret,
+      {
+        expiresIn: "4h",
+      },
+      (err, token) => {
+        if (err) {
+          console.log(err);
+          reject("No se pudo generar el token");
+        }
+
+        resolve(token);
+      }
+    );
+  });
+};

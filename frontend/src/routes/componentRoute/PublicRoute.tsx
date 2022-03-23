@@ -10,8 +10,18 @@ interface IProps {
 }
 const PublicRoute = ({ children, setError, isAuth = false }: IProps) => {
   const navigate = useNavigate();
-
-  return isAuth ? <Navigate to={"/"} replace /> : children;
+  const dispatch = useAppDispatch();
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    const isAuthenticated = async () => {
+      await dispatch(authMe())
+        .unwrap()
+        .then(() => navigate("/calendar"))
+        .catch((e) => e);
+    };
+    isAuthenticated();
+  }, [dispatch, setIsLogin]);
+  return children;
 };
 
 export default PublicRoute;

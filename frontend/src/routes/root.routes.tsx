@@ -11,15 +11,14 @@ import PrivateRoute from "./componentRoute/PrivateRoute";
 import { NotFound } from "../pages";
 import LayoutWithNavbarSidebar from "../layout/private/LayoutWithNavbarSidebar";
 import Landing from "../pages/Landing";
+import LoaderSpinner from "../components/spinner/LoaderSpinner";
 
 const AppRouter = () => {
   const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { isLogin, messages } = useAppSelector((state) => state.authState);
   const [isClose, setIsClose] = useState(false);
-  const [isAuth, setIsAuth] = useState(
-    useAppSelector((state) => state.authState.isLogin)
-  );
+
   const isStateLogin = useAppSelector((state) => state.authState.isLogin);
   const handleCloseAlert = () => {
     setIsClose(!isClose);
@@ -29,12 +28,11 @@ const AppRouter = () => {
       await dispatch(authMe());
     };
     isAuthenticated();
-    setIsAuth(isStateLogin);
-  }, [setIsClose, dispatch]);
+  }, [dispatch]);
 
   return (
     <>
-      <Suspense fallback="cargando....">
+      <Suspense fallback={<LoaderSpinner />}>
         <Routes>
           <Route path="/" element={<Landing />} />
           {isStateLogin && (
@@ -52,22 +50,21 @@ const AppRouter = () => {
               ))}
             </Route>
           )}
-          {!isStateLogin && (
-            <Route element={<Layout />}>
-              {publicDataRoutes.map((route) => (
-                <Route
-                  index={route.path === "login"}
-                  key={route.to}
-                  path={route.path}
-                  element={
-                    <PublicRoute setError={setError} isAuth={isStateLogin}>
-                      <route.Component />
-                    </PublicRoute>
-                  }
-                />
-              ))}
-            </Route>
-          )}
+
+          <Route element={<Layout />}>
+            {publicDataRoutes.map((route) => (
+              <Route
+                index={route.path === "login"}
+                key={route.to}
+                path={route.path}
+                element={
+                  <PublicRoute setError={setError} isAuth={isStateLogin}>
+                    <route.Component />
+                  </PublicRoute>
+                }
+              />
+            ))}
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

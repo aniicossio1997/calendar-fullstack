@@ -80,12 +80,6 @@ const Navbar = () => {
                   <ItemLink to={route.to} name={route.name} />
                 </Fragment>
               ))}
-            <Link style={{ textDecoration: "none " }} onClick={closeSesion}>
-              <Stack alignItems="center" color={"inherit"} direction="row">
-                <b>{"SALIR"}</b>
-                <Icon as={MdLogout} h="5" w={"5"} />
-              </Stack>
-            </Link>
           </Stack>
         </Flex>
       </Stack>

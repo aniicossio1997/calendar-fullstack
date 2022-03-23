@@ -40,7 +40,10 @@ export const postUser = async (
   if (user) {
     return response
       .status(400)
-      .json({ ok: false, errors: { msg: "El user ya existe" } });
+      .json({
+        ok: false,
+        errors: { msg: "Ya existe un usuario con ese email" },
+      });
   }
   try {
     const newUser = new User(body);

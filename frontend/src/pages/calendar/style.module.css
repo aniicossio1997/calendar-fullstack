@@ -1,14 +1,10 @@
-html,
-body {
-  height: 100vh;
-}
 .calendar-screen {
-  display: flex;
-  flex-flow: column;
-  height: 100vh;
+  text-transform: capitalize;
 }
 .rbc-calendar {
   height: 100%;
+  margin: 0 auto;
+  width: 90%;
 }
 
 .rbc-row-content {
@@ -16,4 +12,27 @@ body {
 }
 .rbc-row {
   width: 100vh;
+}
+.fullcalendar {
+  text-transform: capitalize;
+  display: block;
+}
+
+.fullcalendar .fc-header-toolbar,
+.fc-toolbar,
+.fc-toolbar-ltr,
+.fc-toolbar {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  flex-wrap: nowrap !important;
+  flex-direction: column !important;
+  align-content: center !important;
+}
+.fullcalendar .fc-toolbar > * {
+  width: 100%;
+  display: block !important;
+}
+.fullcalendar .fc-toolbar-title {
+  text-transform: capitalize !important;
 }

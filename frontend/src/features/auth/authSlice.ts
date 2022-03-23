@@ -61,7 +61,6 @@ const authSlice = createSlice({
           "token-init-date",
           new Date().getTime().toString()
         );
-        state.status = "succeeded";
         state.isLogin = true;
       })
       .addCase(authLogin.rejected, (state, { error }) => {

@@ -8,9 +8,9 @@ import { comparIdUsers } from "../utils/comparIdUsers";
 
 interface IEventController {
   title: String;
-  notes: string;
-  dateStart: Date;
-  dateEnd: Date;
+  description: string;
+  start: Date;
+  end: Date;
   user_id: ObjectId;
   uid: ObjectId;
   email: string;
@@ -22,7 +22,7 @@ export const getAll = (req: Request, res: Response) => {
   });
 };
 export const getEvents = async (req: Request, res: Response) => {
-  const events = await Event.find().populate("user", "name email");
+  const events = await Event.find();
   res.json({
     ok: true,
     msg: "events",
@@ -38,21 +38,21 @@ export const getEvent = (req: Request, res: Response) => {
 export const postEvent = async (req: Request, res: Response) => {
   //crearEvento
   const body = req.body as IEventController;
-  const event = {
+  const event_sanitize = {
     title: body.title,
-    notes: body.notes,
-    dateStart: body.dateStart,
-    dateEnd: body.dateEnd,
+    description: body.description,
+    start: body.start,
+    end: body.end,
     user: body.user_id,
   };
   try {
     await comparIdUsers(body.user_id, body.uid);
-    const newEvent = new Event(event);
-    const eventSave = await newEvent.save();
+    const newEvent = new Event(event_sanitize);
+    const event = await newEvent.save();
     return res.json({
       ok: true,
       msg: "event created",
-      eventSave,
+      event,
     });
   } catch (error) {
     console.log(error);

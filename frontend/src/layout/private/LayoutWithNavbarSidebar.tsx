@@ -11,19 +11,30 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import { Container, Alert, AlertIcon } from "@chakra-ui/react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import Swal from "sweetalert2";
 import SidebarContent from "./SidebarContent";
 import { Outlet } from "react-router-dom";
 import { ImMenu } from "react-icons/im";
 import DrawerMenu from "./DrawerMenu";
+import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
+import { authMe } from "../../features/auth/authActions";
 
 export default function LayoutWithNavbarSidebar() {
+  const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { messages } = useAppSelector((state) => state.authState);
+  const { messages, user } = useAppSelector((state) => state.authState);
+
   const [isClose, setIsClose] = useState(false);
   const drawer = useDisclosure();
   const btnRef = useRef(null);
+  useEffect(() => {
+    const retriveEvents = async () => {
+      await dispatch(authMe());
+      await dispatch(retriveEventsOfUser(user.id));
+    };
+    retriveEvents();
+  }, []);
 
   useEffect(() => {
     if (messages.show) {

@@ -6,19 +6,16 @@ import { comparIdUsers } from "../utils/comparIdUsers";
 
 interface IEventController {
   title: String;
-  notes: string;
-  dateStart: Date;
-  dateEnd: Date;
+  description: string;
+  start: Date;
+  end: Date;
   user_id: ObjectId;
   uid: ObjectId;
   email: string;
 }
 
 export const getEvents = async (req: Request, res: Response) => {
-  const events = await Event.find({ user: req.params.user }).populate(
-    "user",
-    "name email"
-  );
+  const events = await Event.find({ user: req.params.user });
   res.json({
     ok: true,
     msg: "events of users",
@@ -55,21 +52,21 @@ export const getEvent = async (req: Request, res: Response) => {
 export const postEvent = async (req: Request, res: Response) => {
   //crearEvento
   const body = req.body as IEventController;
-  const event = {
+  const event_sanitize = {
     title: body.title,
-    notes: body.notes,
-    dateStart: body.dateStart,
-    dateEnd: body.dateEnd,
+    description: body.description,
+    start: body.start,
+    end: body.end,
     user: body.user_id,
   };
   try {
     await comparIdUsers(body.user_id, body.uid);
-    const newEvent = new Event(event);
-    const eventSave = await newEvent.save();
+    const newEvent = new Event(event_sanitize);
+    const event = await newEvent.save();
     return res.json({
       ok: true,
       msg: "event created",
-      eventSave,
+      event,
     });
   } catch (error) {
     console.log(error);
@@ -81,38 +78,36 @@ export const postEvent = async (req: Request, res: Response) => {
 };
 export const putEvent = async (req: Request, res: Response) => {
   const body = req.body as IEventController;
-  const eventReq = {
+  const event_sanitize = {
     title: body.title,
-    dateStart: body.dateStart,
-    dateEnd: body.dateEnd,
-    notes: body.notes,
+    start: body.start,
+    end: body.end,
+    description: body.description,
   };
 
   try {
-    const event = await Event.findOne({
+    const eventFind = await Event.findOne({
       user: req.params.user,
       _id: req.params.id,
     });
-    if (event) {
+    if (eventFind) {
       const nuevoEvento = {
-        ...eventReq,
-        user: event?.user,
+        ...event_sanitize,
+        user: eventFind?.user,
       };
-      const eventUpdated = await Event.findByIdAndUpdate(
-        event?.id,
-        nuevoEvento,
-        { new: true }
-      );
+      const event = await Event.findByIdAndUpdate(eventFind?.id, nuevoEvento, {
+        new: true,
+      });
       return res.json({
         ok: true,
         msg: "success updated event",
-        eventUpdated,
+        event,
       });
     } else {
       return res.status(404).json({
         ok: false,
         msg: "Hubo un error al actualizar, hable con el admi",
-        event,
+        event_sanitize,
       });
     }
   } catch (error) {

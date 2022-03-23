@@ -1,0 +1,8 @@
+.fc .fc-toolbar {
+  display: block !important;
+  text-transform: capitalize !important;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: rgb(164, 202, 200) !important;
+}

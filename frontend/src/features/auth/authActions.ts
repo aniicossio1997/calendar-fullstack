@@ -1,6 +1,7 @@
 import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { loginAPI } from "../../services/methodHttp";
+import { LocalStorageService } from "../../services/ServiceLocalStore";
 import { IAuthResult, IBadRequest } from "../../ts/interfaces/IAuth";
 import { IUserLogin, IUserRegister } from "../../ts/interfaces/IUser";
 
@@ -9,7 +10,10 @@ export const authLogin = createAsyncThunk(
   // if you type your function argument here
   async (userLogin: IUserLogin) => {
     const response = await loginAPI.login(userLogin);
-    return (await response.data) as IAuthResult;
+    const data = response.data as IAuthResult;
+    return data;
+    // window.location.href = "/";
+    // return data;
   }
 );
 export const authMe = createAsyncThunk(

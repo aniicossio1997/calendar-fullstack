@@ -4,17 +4,21 @@ import { useRef, useState } from "react";
 import { InputText } from "../../components/form/InputText";
 import { initialValuesLogin, LoginSchema, IValuesLogin } from "./validate";
 import { dataLogin } from "./dataForm";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { authLogin } from "./authActions";
 import { useNavigate } from "react-router-dom";
 import LayoutBaseForm from "../../components/form/LayoutBaseForm";
+import { retriveEventsOfUser } from "../calendar/eventsActions";
 
 export const LoginScreen = () => {
   const form = useRef<any>(null); // MutableRefObject<null>
   const dispatch = useAppDispatch();
+  const [isAuth, setIsAuth] = useState(false);
+  const { messages, user, isLogin } = useAppSelector(
+    (state) => state.authState
+  );
+
   const navigate = useNavigate();
-  const bgContainer = useColorModeValue("gray.50", "gray.800");
-  const bgForm = useColorModeValue("white", "gray.700");
   const [isError, setIsError] = useState(false);
   const sendEmail = async (
     value: IValuesLogin,
@@ -22,18 +26,24 @@ export const LoginScreen = () => {
       nextState?: Partial<FormikState<IValuesLogin>> | undefined
     ) => void
   ) => {
-    const response = await dispatch(authLogin(value));
-    if (response.meta.requestStatus === "rejected") {
-      setIsError(true);
-    } else {
-      setIsError(false);
-      restForm();
-      navigate("/");
-    }
+    console.log(isLogin);
+    setIsAuth(false);
+    await dispatch(authLogin(value))
+      .unwrap()
+      .then((response) => {
+        setIsAuth(true);
+        //window.location.href = "/";
+        navigate("/");
+        restForm();
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
   return (
     <>
-      <Container minH={"100vh"} bg={useColorModeValue("gray.50", "gray.800")}>
+      <Container bg={useColorModeValue("gray.50", "gray.800")}>
         <Formik
           initialValues={initialValuesLogin}
           onSubmit={(

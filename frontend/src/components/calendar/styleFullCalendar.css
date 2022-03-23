@@ -1,0 +1,31 @@
+.fc .fc-view-harness {
+  position: relative !important;
+  max-height: 800px !important;
+}
+.fc .fc-toolbar {
+  display: block !important;
+  text-transform: capitalize !important;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: rgb(164, 202, 200) !important;
+}
+@media only screen and (max-width: 700px) {
+  .fc-daygrid-body .fc-daygrid-body-balanced {
+    position: absolute !important;
+    min-height: 500px;
+  }
+  .fc-scrollgrid-sync-table {
+    position: absolute !important;
+    min-height: 600px;
+  }
+  .fc .fc-scrollgrid-liquid {
+    max-height: 650px !important;
+  }
+  tbody .fc .fc-daygrid-day-frame {
+    max-height: 450px !important;
+  }
+  .fc .fc-view-harness {
+    min-height: 700px !important;
+  }
+}
