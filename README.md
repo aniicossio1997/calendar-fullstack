@@ -41,7 +41,7 @@
 
 | Method |Eventos  | Descripción| Respuesta
 |--|--|--| -----|
-| GET | /api/users/:user/events | Devuelve todos los eventos del usuario |
+| GET | /api/users/:user/events | Devuelve todos los eventos dr un usuario |
 | POST | /api/users/:user/events | Crea un evento para un usuario  |
-| PUT | /api/users/:user/events/:id | Modifica un evento de un usuario |
+| PUT | /api/users/:user/events/:id | Modifica un evento perteneciente a un usuario |
 | DELETE | /api/users/:user/events/:id | Elimina un evento perteneciente a un usuario |
