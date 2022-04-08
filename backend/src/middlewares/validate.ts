@@ -9,6 +9,7 @@ export const validate = (req: Request, res: Response, next: NextFunction) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       ok: false,
+      msg: "Hay campos que son requeridos",
       errors: errors.mapped(),
     });
   }

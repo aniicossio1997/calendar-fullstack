@@ -6,6 +6,7 @@ import { validate } from "../middlewares/validate";
 import { isValidDate } from "../utils/isValidDate";
 import { ObjectId } from "mongoose";
 import { validateUser } from "../middlewares/validateUser";
+import { validateDate } from "../middlewares/validateDate";
 const toObjectId: CustomSanitizer = (value: any) => {
   return value as ObjectId;
 };
@@ -30,8 +31,8 @@ routerUserEvents.post(
       isValidDate
     ),
     check("user_id", "el id de usuario debe de ser obligatorio").notEmpty(),
-
     validate,
+    validateDate,
     validateUser,
   ],
 
@@ -51,6 +52,7 @@ routerUserEvents.put(
       isValidDate
     ),
     validate,
+    validateDate,
     validateUser,
   ],
   Controller.putEvent

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import User, { IUser } from "../models/useModel";
+import User, { IUser } from "../models/userModel";
 
 export const getUsers = async (request: Request, response: Response) => {
   try {
@@ -38,12 +38,10 @@ export const postUser = async (
   } as IUser;
   const user = await User.findOne({ email: body.email });
   if (user) {
-    return response
-      .status(400)
-      .json({
-        ok: false,
-        errors: { msg: "Ya existe un usuario con ese email" },
-      });
+    return response.status(400).json({
+      ok: false,
+      errors: { msg: "Ya existe un usuario con ese email" },
+    });
   }
   try {
     const newUser = new User(body);

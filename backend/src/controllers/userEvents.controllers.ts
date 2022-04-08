@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import Event from "../models/eventModel";
 import { ObjectId } from "mongoose";
 import { comparIdUsers } from "../utils/comparIdUsers";
+import moment from "moment";
 
 interface IEventController {
   title: String;
@@ -59,7 +60,12 @@ export const postEvent = async (req: Request, res: Response) => {
     end: body.end,
     user: body.user_id,
   };
+
   try {
+    const startMoment = moment(event_sanitize.start);
+    const endMoment = moment(event_sanitize.end);
+    console.log(startMoment, endMoment);
+    console.log(!startMoment.isSameOrAfter(endMoment));
     await comparIdUsers(body.user_id, body.uid);
     const newEvent = new Event(event_sanitize);
     const event = await newEvent.save();
@@ -142,7 +148,7 @@ export const deleteEvent = async (req: Request, res: Response) => {
       return res.json({
         ok: true,
         msg: "success deleted event",
-        eventDeleted,
+        event: eventDeleted,
       });
     }
   } catch (error) {

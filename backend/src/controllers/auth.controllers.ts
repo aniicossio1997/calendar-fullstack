@@ -2,7 +2,7 @@
 api/auth/
 */
 import { Request, Response } from "express";
-import User, { IUser } from "../models/useModel";
+import User, { IUser } from "../models/userModel";
 import { createToken } from "../utils/createToken";
 
 export const login = async (request: Request, response: Response) => {

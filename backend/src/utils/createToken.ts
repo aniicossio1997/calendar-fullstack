@@ -9,7 +9,7 @@ export const createToken = (id: any, email: string) => {
       payload,
       config.jwtSecret,
       {
-        expiresIn: "4h",
+        expiresIn: "8h",
       },
       (err, token) => {
         if (err) {

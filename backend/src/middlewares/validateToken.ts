@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Interface } from "readline";
 import config from "../config/config";
-import { IUser } from "../models/useModel";
+import { IUser } from "../models/userModel";
 
 interface IVerify {
   id: string;

@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Schema, Document, model } from "mongoose";
 
 export type objectID = Schema.Types.ObjectId;
@@ -34,6 +35,7 @@ const eventSchema = new Schema({
 eventSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id;
+    returnedObject.start = moment(returnedObject.start).toDate();
     delete returnedObject._id;
     delete returnedObject.__v;
   },
