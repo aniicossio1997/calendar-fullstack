@@ -8,30 +8,6 @@ import { validate } from "../middlewares/validate";
 import { isValidDate } from "../utils/isValidDate";
 
 const routerEvents = Router();
-routerEvents.get("/all", Controller.getAll);
-//para validar todos los token
-routerEvents.use(validateToken);
-routerEvents.get("/", Controller.getEvents);
+routerEvents.get("/", Controller.getAll);
 
-routerEvents.post(
-  "/",
-  [
-    check("title", "El titulo es obligatorio").notEmpty(),
-    check(
-      "start",
-      "La fecha de inicio es obligatoria y debe de ser valida"
-    ).custom(isValidDate),
-    check("end", "La fecha de fin es obligatoria y debe ser valida").custom(
-      isValidDate
-    ),
-    check("user_id", "el id de usuario debe de ser obligatorio").notEmpty(),
-    validate,
-  ],
-
-  Controller.postEvent
-);
-
-routerEvents.get("/:id", Controller.getEvent);
-routerEvents.put("/:id", Controller.putEvent);
-routerEvents.delete(":/", Controller.deleteEvent);
 export default routerEvents;

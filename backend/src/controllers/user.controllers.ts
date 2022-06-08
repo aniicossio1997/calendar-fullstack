@@ -1,10 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import User, { IUser } from "../models/userModel";
+import { HttpStatusCode } from "../utils/HttpStatusCode";
 
 export const getUsers = async (request: Request, response: Response) => {
   try {
     const users = await User.find();
-    return response.json({ ok: true, data: { users } });
+    const userSanatize = users.map((user) => ({
+      email: user.email,
+      id: user.id,
+    }));
+    return response.json({ ok: true, data: { users: userSanatize } });
   } catch (error) {
     console.log(error);
     response.status(404).json({
@@ -20,9 +25,7 @@ export const getUser = async (request: Request, response: Response) => {
     const user = await User.findOne({ _id: id });
     return response.json({ ok: true, user });
   } catch (error) {
-    response
-      .status(404)
-      .json({ ok: false, errors: { msg: "error user Not found" } });
+    response.status(404).json({ ok: false, msg: "error user Not found" });
   }
 };
 export const postUser = async (
@@ -37,10 +40,13 @@ export const postUser = async (
     password: request.body.password.trim(),
   } as IUser;
   const user = await User.findOne({ email: body.email });
-  if (user) {
-    return response.status(400).json({
+  try {
+    if (user) throw new Error("El usuario existe");
+  } catch (error) {
+    console.log("[ERROR:]", error);
+    return response.status(HttpStatusCode.BAD_REQUEST).json({
       ok: false,
-      errors: { msg: "Ya existe un usuario con ese email" },
+      msg: "Ya existe un usuario con ese email",
     });
   }
   try {
@@ -50,7 +56,7 @@ export const postUser = async (
   } catch (error) {
     return response.status(500).json({
       ok: false,
-      errors: { msg: "Hable con el administrador" },
+      msg: "Hable con el administrador",
     });
   }
 };

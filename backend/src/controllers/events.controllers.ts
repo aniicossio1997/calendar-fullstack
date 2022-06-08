@@ -5,6 +5,7 @@ import Event, { IEvent } from "../models/eventModel";
 import { ObjectId } from "mongoose";
 import moment from "moment";
 import { comparIdUsers } from "../utils/comparIdUsers";
+import userModel from "../models/userModel";
 
 interface IEventController {
   title: String;
@@ -15,9 +16,20 @@ interface IEventController {
   uid: ObjectId;
   email: string;
 }
-export const getAll = (req: Request, res: Response) => {
+export const getAll = async (req: Request, res: Response) => {
+  // const events = await Event.find({}, function (err, events) {
+  //   userModel.populate(events, { path: "user" }, function (err, events) {
+  //     return events;
+  //   });
+  // });
+  const events = await Event.find({}).populate("user", {
+    email: 1,
+    name: 1,
+    id: 1,
+  });
   res.json({
     ok: true,
+    data: events,
     msg: "All events",
   });
 };
@@ -33,44 +45,5 @@ export const getEvent = (req: Request, res: Response) => {
   res.json({
     ok: true,
     msg: "event get",
-  });
-};
-export const postEvent = async (req: Request, res: Response) => {
-  //crearEvento
-  const body = req.body as IEventController;
-  const event_sanitize = {
-    title: body.title,
-    description: body.description,
-    start: body.start,
-    end: body.end,
-    user: body.user_id,
-  };
-  try {
-    await comparIdUsers(body.user_id, body.uid);
-    const newEvent = new Event(event_sanitize);
-    const event = await newEvent.save();
-    return res.json({
-      ok: true,
-      msg: "event created",
-      event,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      ok: false,
-      msg: "hubo un error en la creación del evento, comuniquese con el administrador",
-    });
-  }
-};
-export const putEvent = (req: Request, res: Response) => {
-  res.json({
-    ok: true,
-    msg: "event updated",
-  });
-};
-export const deleteEvent = (req: Request, res: Response) => {
-  res.json({
-    ok: true,
-    msg: "event deleted",
   });
 };

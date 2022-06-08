@@ -10,6 +10,7 @@ config();
 // };
 export default {
   DB: {
+    MONGO_URI: process.env.MONGO_URI || "mongodb://localhost:27017/calendar",
     MONGO_DATABASE: process.env.MONGO_DATABASE || "calendar",
     MONGO_USER: process.env.MONGO_USER || "",
     MONGO_PASSWORD: process.env.MONGO_PASSWORD || "",

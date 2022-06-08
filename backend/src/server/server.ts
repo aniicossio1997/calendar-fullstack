@@ -27,15 +27,15 @@ class Server {
   }
   listen() {
     this.app.listen(this.port, () => {
-      console.log(`servidor corriendo en http://localhost:${this.port}/api`);
+      console.log(`The server is running on http://localhost:${this.port}/api`);
     });
   }
   routes() {
     this.app.use(this.apiPath.index, router);
+    this.app.use(this.apiPath.events, routerEvents);
     this.app.use(this.apiPath.users, routerUsers);
     this.app.use(this.apiPath.auth, routerAuth);
     this.app.use(this.apiPath.usersEvents, routerUserEvents);
-    this.app.use(this.apiPath.events, routerEvents);
   }
   middlewares() {
     //cors
