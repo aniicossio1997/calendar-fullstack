@@ -1,6 +1,6 @@
 .fc .fc-view-harness {
   position: relative !important;
-  max-height: 800px !important;
+  max-height: 850px !important;
 }
 .fc .fc-toolbar {
   display: block !important;
@@ -10,10 +10,19 @@
 .fc .fc-daygrid-day.fc-day-today {
   background-color: rgb(164, 202, 200) !important;
 }
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 790px) {
+  .fc-header-toolbar .fc-toolbar {
+    display: flex;
+    flex-direction: row-reverse;
+    min-width: 100vh;
+  }
+  .fc-toolbar h2 {
+    font-size: 1em !important;
+  }
   .fc-daygrid-body .fc-daygrid-body-balanced {
     position: absolute !important;
-    min-height: 500px;
+    min-height: 600px;
+    padding: 0% !important;
   }
   .fc-scrollgrid-sync-table {
     position: absolute !important;
@@ -23,9 +32,14 @@
     max-height: 650px !important;
   }
   tbody .fc .fc-daygrid-day-frame {
-    max-height: 450px !important;
+    max-height: 490px !important;
   }
   .fc .fc-view-harness {
     min-height: 700px !important;
+  }
+  .fc,
+  .fc-media-screen {
+    padding: 0;
+    min-width: 100%;
   }
 }

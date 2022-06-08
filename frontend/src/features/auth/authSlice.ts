@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { LocalStorageService } from "../../services/ServiceLocalStore";
 import { IAuthResult, IBadRequest } from "../../ts/interfaces/IAuth";
-import { IUser } from "../../ts/interfaces/IUser";
+import { IBadRequestUser, IUser } from "../../ts/interfaces/IUser";
 import { authLogin, authMe, userRegister } from "./authActions";
 type statusAuth = "idle" | "pending" | "succeeded" | "failed";
 interface IMessage {
@@ -35,7 +35,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout(state) {
+    logout(state: IStateInitial) {
       localStorage.clear();
       state.isLogin = false;
       state.user = {
@@ -44,7 +44,7 @@ const authSlice = createSlice({
         id: "",
       };
     },
-    resetMessage(state) {
+    resetMessage(state: IStateInitial) {
       state.messages = initailMsg;
     },
   },
@@ -99,7 +99,7 @@ const authSlice = createSlice({
           state.messages.description =
             "Se registro el usuario, usted ya puede loguearse";
           state.messages.show = true;
-          state.messages.type = "error";
+          state.messages.type = "success";
         }
       })
       .addCase(userRegister.rejected, (state, action) => {
@@ -109,7 +109,7 @@ const authSlice = createSlice({
         state.messages = {
           type: "error",
           show: true,
-          description: (action.payload as IBadRequest).errors.msg,
+          description: (action.payload as IBadRequestUser).msg,
         };
       });
   },

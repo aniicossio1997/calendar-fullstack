@@ -26,7 +26,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const dispatch = useAppDispatch();
   const closeSesion = () => {
     dispatch(logout());
-    navigate("/login");
+    navigate("/");
   };
   return (
     <Box

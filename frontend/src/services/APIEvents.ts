@@ -28,11 +28,16 @@ export class URIWithTokenEvents {
       dataEvent
     );
   }
-  put(idUser: string, idEvent: string, dataEvent: IEventPUT) {
-    return this.httpClient.put(
+  put<T>(idUser: string, idEvent: string, dataEvent: IEventPUT) {
+    return this.httpClient.put<T>(
       `${this._endpoint}/${idUser}/events/${idEvent}`,
       dataEvent
     );
   }
-  delete() {}
+  delete<T>(idUser: string, idEvent: string) {
+    //method delete
+    return this.httpClient.delete<T>(
+      `${this._endpoint}/${idUser}/events/${idEvent}`
+    );
+  }
 }

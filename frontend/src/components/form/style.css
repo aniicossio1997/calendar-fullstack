@@ -1,4 +1,6 @@
 input:disabled {
   opacity: 0.8 !important;
-  background-color: rgb(224, 228, 228);
+  border-color: rgb(251, 251, 251) !important ;
+  padding: 0% !important;
+  cursor: auto !important;
 }

@@ -6,6 +6,8 @@ import { IValuesRegister } from "../../features/auth/validate";
 import { useAppSelector } from "../../app/hooks";
 import { Form, Formik, FormikHelpers, FormikState } from "formik";
 import { InputText } from "../../components/form/InputText";
+import InputCustom from "../../components/form/inputCustomEvent/InputCustom";
+import { dataFormPrivate } from "../../components/profileComponents/dataFormPrivate";
 
 export default function ProfileScreen(): JSX.Element {
   const form = useRef<any>(null); // MutableRefObject<null>
@@ -42,7 +44,7 @@ export default function ProfileScreen(): JSX.Element {
         {({ handleReset, errors, touched }) => (
           <Form noValidate ref={form}>
             <Stack spacing={4}>
-              {dataRegister.map((dataForm) => (
+              {dataFormPrivate.map((dataForm) => (
                 <InputText
                   key={dataForm.name}
                   label={dataForm.label}

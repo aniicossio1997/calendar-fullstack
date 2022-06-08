@@ -26,7 +26,10 @@ export const LoginSchema = Yup.object().shape({
 });
 
 export const RegisterSchema = Yup.object().shape({
-  name: Yup.string().min(2, "Too short").required("Name is required"),
+  name: Yup.string()
+    .min(2, "Too short")
+    .required("Name is required")
+    .matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
   password: Yup.string()
     .min(4, "Too short")
     .max(100, "Sorry, Too Long")

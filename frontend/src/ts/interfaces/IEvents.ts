@@ -34,7 +34,7 @@ export interface IEventSave {
 export interface IEventRequestSuccess {
   ok: boolean;
   msg: string;
-  event: IEventSave;
+  event: IEvent;
 }
 export interface IEventBadRequest {
   ok: boolean;

@@ -4,35 +4,41 @@ import FullCalendar, {
   EventApi,
   EventClickArg,
 } from "@fullcalendar/react";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { IEvent } from "../../ts/interfaces/IEvents";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import "./styleFullCalendar.css";
 import { Container } from "@chakra-ui/react";
-import CalendarScreen from "../../pages/calendar/CalendarScreen";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import useEvent from "../../hook/useEvent";
+import InputDateTime from "../form/fieldDateTime/InputDateTime";
 interface IProps {
   events: IEvent[];
 }
 const handleSelectable = (...rest: any) => {
+  console.log("hello");
   console.log(rest);
   return false;
 };
 
 const FullCalendarCustom = ({ events }: IProps) => {
-  const handleClickEvent = (e: DateSelectArg) => {
-    console.log(e);
-  };
-  const handleClick = (e: EventClickArg) => {
-    console.log(e.event.id);
-    let id = e.event.id;
-    const anEvent = events.find((e) => e.id === id);
-    console.log(anEvent);
-  };
+  const { handleClick } = useEvent();
+  let calendarRef = React.createRef<null | any>();
+  useEffect(() => {
+    // console.log(calendarRef);
+    return () => {
+      console.log(calendarRef);
+    };
+  }, []);
+
   return (
     <>
-      <Container maxW="95%">
+      <Container
+        maxW={{ base: "100%", lg: "95%" }}
+        padding={{ base: 0, md: undefined }}
+      >
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
@@ -47,8 +53,16 @@ const FullCalendarCustom = ({ events }: IProps) => {
           dayMaxEvents={true}
           locale={"es"}
           events={events}
-          select={handleClickEvent}
-          eventClick={handleClick}
+          eventClick={(e) => handleClick(e.event.id)}
+          navLinks={true}
+          navLinkWeekClick={() =>
+            function (weekStart: any, jsEvent: any) {
+              console.log("week start", weekStart.toISOString());
+              console.log("coords", jsEvent.pageX, jsEvent.pageY);
+            }
+          }
+          eventBackgroundColor={"blue"}
+          ref={calendarRef}
         />
       </Container>
     </>

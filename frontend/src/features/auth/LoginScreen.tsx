@@ -1,6 +1,6 @@
-import { Container, useColorModeValue } from "@chakra-ui/react";
+import { Container, Text, useColorModeValue } from "@chakra-ui/react";
 import { Formik, Form, FormikHelpers, FormikState } from "formik";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { InputText } from "../../components/form/InputText";
 import { initialValuesLogin, LoginSchema, IValuesLogin } from "./validate";
 import { dataLogin } from "./dataForm";
@@ -9,41 +9,23 @@ import { authLogin } from "./authActions";
 import { useNavigate } from "react-router-dom";
 import LayoutBaseForm from "../../components/form/LayoutBaseForm";
 import { retriveEventsOfUser } from "../calendar/eventsActions";
+import { SwalAlertErrorSimple } from "../../components/Alert/SwalAlert";
+import { Link } from "react-router-dom";
+import SimpleAlert from "../../components/Alert/SimpleAlert";
+import useFormLogin from "../../hook/useFormLogin";
 
 export const LoginScreen = () => {
   const form = useRef<any>(null); // MutableRefObject<null>
   const dispatch = useAppDispatch();
-  const [isAuth, setIsAuth] = useState(false);
   const { messages, user, isLogin } = useAppSelector(
     (state) => state.authState
   );
-
-  const navigate = useNavigate();
-  const [isError, setIsError] = useState(false);
-  const sendEmail = async (
-    value: IValuesLogin,
-    restForm: (
-      nextState?: Partial<FormikState<IValuesLogin>> | undefined
-    ) => void
-  ) => {
-    console.log(isLogin);
-    setIsAuth(false);
-    await dispatch(authLogin(value))
-      .unwrap()
-      .then((response) => {
-        setIsAuth(true);
-        //window.location.href = "/";
-        navigate("/");
-        restForm();
-        window.location.reload();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+  const { sendEmail, isError } = useFormLogin();
   return (
     <>
       <Container bg={useColorModeValue("gray.50", "gray.800")}>
+        <SimpleAlert />
+        {/* {JSON.stringify(messages)} */}
         <Formik
           initialValues={initialValuesLogin}
           onSubmit={(
@@ -67,6 +49,12 @@ export const LoginScreen = () => {
                     isError={isError}
                   />
                 ))}
+                <Text color={"blackAlpha.700"} fontSize="xs">
+                  ¿Usted no posee una cuenta?
+                </Text>
+                <Text color={"cyan.700"} fontSize="xs">
+                  <Link to={"/register"}>Click Aqui</Link>
+                </Text>
               </LayoutBaseForm>
             </Form>
           )}

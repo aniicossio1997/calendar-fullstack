@@ -12,7 +12,6 @@ import "./style.css";
 interface Props {
   label: string;
   name: string;
-  type?: "text" | "email" | "textarea" | "password" | any;
   isRequired?: boolean;
   isError?: boolean;
   isDisabled?: boolean;

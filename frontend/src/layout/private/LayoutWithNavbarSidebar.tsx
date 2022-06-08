@@ -19,6 +19,7 @@ import { ImMenu } from "react-icons/im";
 import DrawerMenu from "./DrawerMenu";
 import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
 import { authMe } from "../../features/auth/authActions";
+import { motion } from "framer-motion";
 
 export default function LayoutWithNavbarSidebar() {
   const dispatch = useAppDispatch();
@@ -65,13 +66,13 @@ export default function LayoutWithNavbarSidebar() {
       <Box minH="100vh">
         <SidebarContent
           onClose={() => onClose}
-          display={{ base: "none", md: "block" }}
+          display={{ base: "none", lg: "block" }}
         />
 
         {/* mobilenav */}
         <Navbar drawer={drawer} btnRef={btnRef} />
 
-        <Box ml={{ base: 0, md: 60 }} p="4">
+        <Box ml={{ base: 0, lg: 60 }} p="2">
           <Outlet />
         </Box>
       </Box>
@@ -93,25 +94,25 @@ const Navbar = ({ btnRef, drawer, ...rest }: MobileProps) => {
 
   return (
     <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 4 }}
+      ml={{ base: 0, lg: 60 }}
+      px={{ base: 4, lg: 4 }}
       height="20"
       alignItems="center"
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent={{ base: "flex-end", md: "flex-end" }}
+      justifyContent={{ base: "flex-end", lg: "flex-end" }}
       {...rest}
     >
       <IconButton
         ref={btnRef}
         aria-label="menu"
-        display={{ md: "none" }}
+        display={{ lg: "none" }}
         icon={<Icon as={ImMenu} w={5} h={5} />}
         onClick={drawer.onOpen}
       />
       {
-        <Box display={{ md: "none" }}>
+        <Box display={{ lg: "none" }}>
           <DrawerMenu drawer={drawer} btnRef={btnRef} />
         </Box>
       }

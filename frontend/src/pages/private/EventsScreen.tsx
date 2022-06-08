@@ -1,111 +1,122 @@
 import {
   Container,
   Flex,
-  Grid,
   Icon,
   IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Select,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BaseCalendar from "../../components/calendar/BaseCalendar";
-import { AnimatePresence, motion } from "framer-motion";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
-import { useEffect } from "react";
-import { BiSearch } from "react-icons/bi";
+import {
+  AnimatePresence,
+  AnimateSharedLayout,
+  motion,
+  VariantLabels,
+} from "framer-motion";
 import { BsFillGrid3X3GapFill, BsFillHddStackFill } from "react-icons/bs";
+import { TiThMenu, TiThMenuOutline } from "react-icons/ti";
+
 import { LocalStorageService } from "../../services/ServiceLocalStore";
 import Event from "../../components/eventComponents/Event";
+import NavbarFormEvent from "../../components/eventComponents/NavbarFormEvent";
+import useEvent from "../../hook/useEvent";
+import InputDateTime from "../../components/form/fieldDateTime/InputDateTime";
+
+const listVariants = {
+  visible: {
+    opacity: 1,
+    transition: {
+      when: "beforeChildren",
+      staggerChildren: 0.3,
+    },
+  },
+  hidden: {
+    opacity: 0,
+    transition: {
+      when: "afterChildren",
+    },
+  },
+};
+const itemVariants = {
+  visible: { opacity: 1, x: 0 },
+  hidden: { opacity: 0, x: -100 },
+};
 
 const EventsScreen = () => {
-  const dispatch = useAppDispatch();
-  const events = useAppSelector((state) => state.eventsCalendar.events);
-  const user = useAppSelector((state) => state.authState.user);
+  const { events, handleClick } = useEvent();
   const [view, setView] = useState<boolean>(
     LocalStorageService.getItem<boolean>("viewEvents") || false
   );
+
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isAnimate, setIsAnimate] = useState<boolean>(false);
+
   const handleView = () => {
+    setIsVisible((prevValue) => !prevValue);
+    setIsAnimate(false);
     LocalStorageService.setItem("viewEvents", !view);
     setView(!view);
+    setIsAnimate(true);
+    setIsVisible(true);
   };
   useEffect(() => {
-    const retriveEvents = async () => {
-      await dispatch(retriveEventsOfUser(user.id));
+    setIsVisible(true);
+    return () => {
+      setIsVisible(false);
     };
-    retriveEvents();
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
       <BaseCalendar>
-        <AnimatePresence>
-          <motion.div>
-            <Flex
-              justify={"flex-start"}
-              as={motion.div}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              width={"100%"}
-            >
-              <Container maxW="container.lg">
-                <Grid
-                  templateColumns={{
-                    base: "repeat(1, 1fr)",
-                    md: "repeat(2, 1fr)",
-                  }}
-                  gap={4}
-                  my={3}
+        <Flex justify={"flex-start"} width={"100%"}>
+          <Container maxW="100%">
+            <NavbarFormEvent />
+            <IconButton
+              display={{ base: "none", md: "flex" }}
+              aria-label="view"
+              color={"gray.500"}
+              icon={
+                <Icon as={view ? BsFillGrid3X3GapFill : TiThMenu} w={8} h={8} />
+              }
+              my={4}
+              onClick={handleView}
+            />
+            <InputDateTime />
+            <AnimateSharedLayout>
+              <AnimatePresence initial={false}>
+                <motion.div
+                  initial="hidden"
+                  variants={listVariants}
+                  animate={isVisible ? "visible" : "hidden"}
                 >
-                  <InputGroup>
-                    <InputLeftElement
-                      pointerEvents="none"
-                      children={<Icon as={BiSearch} />}
-                    />
-                    <Input type="search" placeholder="Search" />
-                  </InputGroup>
-                  <Select placeholder="Ordenar">
-                    <option value="option1">Eventos vigente</option>
-                    <option value="option2">Eventos pasadas</option>
-                    <option value="option3">A-Z</option>
-                    <option value="option3">Z-A</option>
-                  </Select>
-                </Grid>
-                <IconButton
-                  display={{ base: "none", md: "flex" }}
-                  aria-label="view"
-                  color={"gray.500"}
-                  icon={
-                    <Icon
-                      as={view ? BsFillGrid3X3GapFill : BsFillHddStackFill}
-                      w={8}
-                      h={8}
-                    />
-                  }
-                  my={4}
-                  onClick={handleView}
-                />
-
-                <SimpleGrid
-                  columns={{ base: 1, md: view ? 1 : 3 }}
-                  spacing={10}
-                  my={3}
-                  bg={"gray.200"}
-                  rounded={"md"}
-                  padding={4}
-                  height={"auto"}
-                >
-                  {events.map((event) => (
-                    <Event key={event.id} event={event} />
-                  ))}
-                </SimpleGrid>
-              </Container>
-            </Flex>
-          </motion.div>
-        </AnimatePresence>
+                  <SimpleGrid
+                    as={motion.div}
+                    initial="hidden"
+                    variants={listVariants}
+                    columns={{ base: 1, md: view ? 1 : 2, xl: view ? 1 : 3 }}
+                    transitionDuration={"2"}
+                    spacing={{ base: 4, lg: 6 }}
+                    my={3}
+                    bg={"gray.100"}
+                    rounded={"md"}
+                    padding={2}
+                    height={"auto"}
+                    boxSizing="border-box"
+                  >
+                    {events.map((event) => (
+                      <Event
+                        key={event.id}
+                        event={event}
+                        handleClick={handleClick}
+                      />
+                    ))}
+                  </SimpleGrid>
+                </motion.div>
+              </AnimatePresence>
+            </AnimateSharedLayout>
+          </Container>
+        </Flex>
       </BaseCalendar>
     </>
   );

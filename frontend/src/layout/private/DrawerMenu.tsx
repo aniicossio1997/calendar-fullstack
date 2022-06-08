@@ -15,6 +15,8 @@ import { MdLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { logout } from "../../features/auth/authSlice";
+import { privateDataRoutes } from "../../routes/private.routes";
+import NavItem from "./NavItem";
 interface IProps {
   drawer: {
     isOpen: boolean;
@@ -45,7 +47,13 @@ const DrawerMenu = ({ drawer, btnRef }: IProps) => {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>Calendar</DrawerHeader>
-          <DrawerBody></DrawerBody>
+          <DrawerBody>
+            {privateDataRoutes.map((link) => (
+              <NavItem key={link.name} icon={link.icon} routeLink={link}>
+                {link.name}
+              </NavItem>
+            ))}
+          </DrawerBody>
 
           <DrawerFooter
             justifyItems={"flex-start"}

@@ -4,10 +4,18 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import moment from "moment";
+import { useAppDispatch } from "../../app/hooks";
 import { IEvensCalendar, IEvents } from "../../ts/interfaces/ICalendar";
-import { IEvent } from "../../ts/interfaces/IEvents";
-import { retriveEventsOfUser, saveEventsOfUser } from "./eventsActions";
+import { IEvent, IEventBadRequest } from "../../ts/interfaces/IEvents";
+import { showMessage } from "../ui/uiMessageSlice";
+import {
+  deleteAnUserevent,
+  retriveEventsOfUser,
+  saveEventsOfUser,
+  updateAnUserEvent,
+} from "./eventsActions";
 
 export interface IEventsReducer extends IEvensCalendar {
   id: string;
@@ -16,20 +24,26 @@ export interface ICalendar {
   activeEvent: null | IEvent;
   events: IEvent[];
   isShowBtnDeleted: boolean;
+  message: {
+    isShow: boolean;
+    description: string;
+    type?: "success" | "error" | null;
+  };
 }
-const nowDate = moment().minutes(0).seconds(0).add(1, "hours");
-const endNowDate = nowDate.clone().add(1, "hours");
 const initialState: ICalendar = {
   events: [],
   activeEvent: null,
   isShowBtnDeleted: false,
+  message: {
+    isShow: false,
+    description: "",
+  },
 };
 const calendarSlice = createSlice({
   name: "eventsCalendar",
   initialState,
   reducers: {
     eventActiveChangedToNull(state) {
-      console.log("estoy en el evento active ");
       state.activeEvent = null;
     },
     eventSetActive(state, action: PayloadAction<IEvent>) {
@@ -59,23 +73,37 @@ const calendarSlice = createSlice({
           state.events = action.payload;
         }
       )
-      .addCase(retriveEventsOfUser.rejected, (state, action) => {
-        console.log("get events in reducers", action.meta);
-      })
+      .addCase(retriveEventsOfUser.rejected, (state, action) => {})
       .addCase(saveEventsOfUser.pending, (state, action) => {})
-      .addCase(saveEventsOfUser.fulfilled, (state, action) => {
-        console.log("fulfilled", action.meta);
-        console.log(action.payload);
-        if (action.meta.requestStatus == "fulfilled") {
+      .addCase(
+        saveEventsOfUser.fulfilled,
+        (state, action: PayloadAction<IEvent>) => {
           const eventNew = action.payload;
           state.events = [...state.events, { ...action.payload }];
         }
+      )
+      .addCase(saveEventsOfUser.rejected, (state, action) => {})
+      .addCase(deleteAnUserevent.fulfilled, (state, action) => {
+        if (action.meta.requestStatus === "fulfilled" && action.payload) {
+          state.events = state.events.filter(
+            (event) => event.id !== state.activeEvent?.id
+          );
+
+          state.activeEvent = null;
+        }
       })
-      .addCase(saveEventsOfUser.rejected, (state, action) => {
-        console.log("rejected");
+      .addCase(deleteAnUserevent.rejected, (state, action) => {})
+      .addCase(updateAnUserEvent.pending, (state, action) => {})
+      .addCase(updateAnUserEvent.fulfilled, (state, action) => {
+        if (action.meta.requestStatus === "fulfilled" && action.payload) {
+          state.events = state.events.map((event) =>
+            event.id == action.payload.id ? action.payload : event
+          );
+        }
       });
   },
 });
+
 export const {
   eventAddNew,
   eventSetActive,

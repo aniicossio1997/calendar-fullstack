@@ -20,3 +20,7 @@ export interface IUserRegister {
   name: string;
   password: string;
 }
+export interface IBadRequestUser {
+  ok: boolean;
+  msg: string;
+}

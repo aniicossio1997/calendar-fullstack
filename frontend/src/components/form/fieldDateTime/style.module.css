@@ -45,13 +45,14 @@
 .datePicker {
   width: 100%;
   min-width: 0px;
-  outline: 2px solid transparent;
+  /* outline: 2px solid transparent; */
   outline-offset: 2px;
   display: flex;
   flex-grow: 1;
   flex-shrink: 0;
   border: 0px solid #ccc !important;
   border-radius: 5px;
+  border: 1px solid rgb(223, 221, 221) !important;
 }
 .datePicker > * {
   padding: 8px;
@@ -60,15 +61,19 @@
   outline: 2px solid transparent !important;
   outline-offset: 2px !important;
   border-radius: 5px;
-  border: 1px solid rgb(233, 229, 229);
+  border: 1px solid #fff;
 }
 .errorDatePicker {
+  border-bottom: 1px #e53e3e !important;
   border-color: 2px #e53e3e !important;
   box-shadow: 0 0 0 2px #e53e3e !important;
 }
-
-.datePicker input:focus {
-  outline: none;
-  border: 1px solid #3182ce;
-  border-radius: 5px;
+.focusDataPicker {
+  border-color: 2px #3182ce !important;
+  box-shadow: 0 0 0 2px #3182ce !important;
+}
+.datapikerEdit {
+  border: 1px solid rgb(223, 221, 221) !important;
+}
+.datePicker:disabled {
 }

@@ -20,7 +20,7 @@ export const dataFormCalendar: IDataForm[] = [
   {
     name: "description",
     type: "textarea",
-    label: "Notas",
+    label: "Descripción",
     Component: TextareaCumtom,
     isRequired: false,
   },
