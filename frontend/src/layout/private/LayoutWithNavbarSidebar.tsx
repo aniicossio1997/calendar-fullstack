@@ -17,7 +17,6 @@ import SidebarContent from "./SidebarContent";
 import { Outlet } from "react-router-dom";
 import { ImMenu } from "react-icons/im";
 import DrawerMenu from "./DrawerMenu";
-import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
 import { authMe } from "../../features/auth/authActions";
 import { motion } from "framer-motion";
 
@@ -32,7 +31,6 @@ export default function LayoutWithNavbarSidebar() {
   useEffect(() => {
     const retriveEvents = async () => {
       await dispatch(authMe());
-      await dispatch(retriveEventsOfUser(user.id));
     };
     retriveEvents();
   }, []);

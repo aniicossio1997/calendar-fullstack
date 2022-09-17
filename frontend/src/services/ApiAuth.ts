@@ -7,7 +7,7 @@ import {
 import { LocalStorageService } from "./ServiceLocalStore";
 
 export const baseURI = process.env.REACT_APP_API_URL;
-export const token = LocalStorageService.getItem<string>("token");
+export let token = LocalStorageService.getItem<string>("token");
 export default class URIAuth {
   /*
   api/auth
@@ -35,7 +35,6 @@ export default class URIAuth {
   }
   me() {
     //method post api/auth/me
-    const token = LocalStorageService.getItem<string>("token");
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };

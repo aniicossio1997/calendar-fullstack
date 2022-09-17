@@ -47,64 +47,6 @@ const useModal = () => {
     setIsEditable(false);
   };
 
-  const handleSubmitForm = async (
-    values: IEvent,
-    { resetForm }: FormikHelpers<IEvent>
-  ) => {
-    //TODO:
-    setIsErrorDate(false);
-    const startMoment = moment(values.start);
-    const endMoment = moment(values.end);
-    console.log(
-      "dates de inicio y de fin",
-      startMoment.format("LLLL"),
-      endMoment.format("LLLL")
-    );
-    console.log(startMoment.isBefore(endMoment));
-    console.log(
-      `si star NO es igual : ${!startMoment.isSameOrAfter(endMoment)}`
-    );
-    console.log(refForm.current);
-    if (!startMoment.isSameOrAfter(endMoment)) {
-      setIsErrorDate(false);
-      if (activeEvent) {
-        const event: IEvent = {
-          title: values.title,
-          end: values.end,
-          start: values.start,
-          description: values.description,
-          user: activeEvent.user,
-          id: activeEvent.id,
-        };
-        try {
-          const response = await dispatch(updateAnUserEvent(event));
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        const event: IEventSave = {
-          title: values.title,
-          end: values.end,
-          start: values.start,
-          description: values.description,
-          user_id: userActual.id as string,
-        };
-        try {
-          await dispatch(saveEventsOfUser(event)).unwrap();
-        } catch (error) {
-          let errorEvent = error as IEventBadRequest;
-          if (errorEvent.ok == false) {
-            setIsErrorDate(true);
-          }
-        }
-      }
-      // setIsSubmit(true);
-      // handleCloseModal();
-      // resetForm();
-    } else {
-      setIsErrorDate(true);
-    }
-  };
   useEffect(() => {
     setIsSubmit(false);
     if (activeEvent) {
@@ -128,7 +70,6 @@ const useModal = () => {
       }
 
       setIsErrorDate(false);
-      console.log(refModal.current);
       refModal.current = null;
     };
   }, [activeEvent, setFormValues, setTitleForm, setIsEditable]);
@@ -138,7 +79,6 @@ const useModal = () => {
     isErrorDate,
     titleForm,
     formValues,
-    handleSubmitForm,
     activeEvent,
     setIsEditable,
     isEditable,

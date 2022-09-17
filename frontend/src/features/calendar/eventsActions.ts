@@ -49,7 +49,7 @@ export const saveEventsOfUser = createAsyncThunk(
   }
 );
 
-export const deleteAnUserevent = createAsyncThunk(
+export const deleteAnUserEvent = createAsyncThunk(
   "delete/users/user_id/events/id",
   async (
     { userId, idEvent }: { userId: string; idEvent: string },

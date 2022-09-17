@@ -10,6 +10,14 @@
 .fc .fc-daygrid-day.fc-day-today {
   background-color: rgb(164, 202, 200) !important;
 }
+.fc-toolbar-chunk{
+  display: block !important;
+  margin-top: 10px;
+  text-transform: capitalize;
+}
+.fc-dayGridMonth-button {
+  text-transform: capitalize !important;
+}
 @media only screen and (max-width: 790px) {
   .fc-header-toolbar .fc-toolbar {
     display: flex;

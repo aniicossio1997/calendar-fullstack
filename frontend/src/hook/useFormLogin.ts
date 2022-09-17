@@ -26,9 +26,9 @@ const useFormLogin = () => {
       await dispatch(authLogin(value))
         .unwrap()
         .then(() => {
-          navigate("/");
-          window.location.href = "/";
-          restForm();
+          //navigate("/");
+          window.location.href = "/calendar";
+          //restForm();
           //window.location.reload();
         })
         .catch((e: any) => {

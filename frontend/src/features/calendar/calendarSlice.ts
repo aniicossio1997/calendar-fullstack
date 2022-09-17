@@ -11,7 +11,7 @@ import { IEvensCalendar, IEvents } from "../../ts/interfaces/ICalendar";
 import { IEvent, IEventBadRequest } from "../../ts/interfaces/IEvents";
 import { showMessage } from "../ui/uiMessageSlice";
 import {
-  deleteAnUserevent,
+  deleteAnUserEvent,
   retriveEventsOfUser,
   saveEventsOfUser,
   updateAnUserEvent,
@@ -83,7 +83,7 @@ const calendarSlice = createSlice({
         }
       )
       .addCase(saveEventsOfUser.rejected, (state, action) => {})
-      .addCase(deleteAnUserevent.fulfilled, (state, action) => {
+      .addCase(deleteAnUserEvent.fulfilled, (state, action) => {
         if (action.meta.requestStatus === "fulfilled" && action.payload) {
           state.events = state.events.filter(
             (event) => event.id !== state.activeEvent?.id
@@ -92,7 +92,7 @@ const calendarSlice = createSlice({
           state.activeEvent = null;
         }
       })
-      .addCase(deleteAnUserevent.rejected, (state, action) => {})
+      .addCase(deleteAnUserEvent.rejected, (state, action) => {})
       .addCase(updateAnUserEvent.pending, (state, action) => {})
       .addCase(updateAnUserEvent.fulfilled, (state, action) => {
         if (action.meta.requestStatus === "fulfilled" && action.payload) {

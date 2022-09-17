@@ -1,4 +1,5 @@
 import { EventClickArg } from "@fullcalendar/react";
+import { FormikHelpers } from "formik";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
@@ -10,15 +11,18 @@ import {
   eventSetActive,
 } from "../features/calendar/calendarSlice";
 import {
-  deleteAnUserevent,
+  deleteAnUserEvent,
   retriveEventsOfUser,
+  saveEventsOfUser,
+  updateAnUserEvent,
 } from "../features/calendar/eventsActions";
 import {
   closeModalReducer,
   openModalReducer,
 } from "../features/modal/calendarModalSlice";
 import { resetMessage, showMessage } from "../features/ui/uiMessageSlice";
-import { IEvent } from "../ts/interfaces/IEvents";
+import { IEvent, IEventSave } from "../ts/interfaces/IEvents";
+import useModal from "./useModal";
 interface IProps {
   events?: IEvent[];
 }
@@ -28,6 +32,7 @@ const useEvent = () => {
     (store) => store.eventsCalendar
   );
   const user = useAppSelector((state) => state.authState.user);
+  const { handleCloseModal } = useModal();
 
   const handleSeletedEvent = (e: EventClickArg) => {
     let id = e.event.id;
@@ -45,7 +50,7 @@ const useEvent = () => {
   const deleteEvent = async () => {
     try {
       const result = await dispatch(
-        deleteAnUserevent({
+        deleteAnUserEvent({
           userId: String(activeEvent?.user),
           idEvent: String(activeEvent?.id),
         })
@@ -80,6 +85,70 @@ const useEvent = () => {
     }).finally(() => dispatch(closeModalReducer()));
   };
 
+  const handleSaveEvent = async (
+    values: IEvent,
+    { resetForm }: FormikHelpers<IEvent>
+  ) => {
+    console.log("nuevo");
+    const event: IEventSave = {
+      title: values.title,
+      end: values.end,
+      start: values.start,
+      description: values.description,
+      user_id: String(user.id),
+    };
+    try {
+      const result = await dispatch(saveEventsOfUser(event)).unwrap();
+      if (result.title) {
+        dispatch(
+          showMessage({
+            type: "success",
+            description: `Se creo el evento exitosamente ${result.title}`,
+          })
+        );
+        resetForm();
+        dispatch(closeModalReducer());
+      }
+    } catch (error) {
+      dispatch(
+        showMessage({
+          type: "error",
+          description: "Lo sentimos hubo un error",
+        })
+      );
+    }
+  };
+  const handleUpdateEvent = async (
+    values: IEvent,
+    { resetForm }: FormikHelpers<IEvent>
+  ) => {
+    //si edit
+    if (activeEvent) {
+      const event: IEvent = {
+        title: values.title,
+        end: values.end,
+        start: values.start,
+        description: values.description,
+        user: activeEvent.user,
+        id: activeEvent.id,
+      };
+      try {
+        const response = await dispatch(updateAnUserEvent(event)).unwrap();
+        if (response.title) {
+          dispatch(
+            showMessage({
+              type: "success",
+              description: `Se actualizo el evento exitosamente ${response.title}`,
+            })
+          );
+          resetForm();
+          dispatch(closeModalReducer());
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   const handleClick = (idEvent: string) => {
     const anEvent = events.find((e) => e.id === idEvent);
     if (anEvent) {
@@ -95,16 +164,10 @@ const useEvent = () => {
   const handleResetEventActive = () => {
     dispatch(eventActiveChangedToNull());
   };
-  useEffect(() => {
-    const retriveEvents = async () => {
-      await dispatch(retriveEventsOfUser(user.id));
-    };
-    retriveEvents();
-  }, [dispatch]);
+
   useEffect(() => {
     return () => {
       dispatch(eventActiveChangedToNull());
-      dispatch(resetMessage());
     };
   }, [dispatch]);
 
@@ -115,6 +178,8 @@ const useEvent = () => {
     handleResetEventActive,
     events,
     handleDeleted,
+    handleSaveEvent,
+    handleUpdateEvent,
   };
 };
 

@@ -20,8 +20,6 @@ const useRoute = () => {
         .unwrap()
         .then((e) => {
           setIsAuth(isLogin);
-
-          navigate("/calendar");
         })
         .catch(() => {
           navigate("/login");

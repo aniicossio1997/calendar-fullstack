@@ -39,7 +39,11 @@ export const InputDatePicker = forwardRef(
                     isInvalid={(meta.touched && meta.error) || isError}
                     isRequired
                   >
-                    <FormLabel htmlFor={field.name} color={"gray.600"}>
+                    <FormLabel
+                      htmlFor={field.name}
+                      color={"gray.600"}
+                      fontSize={{ base: "12", md: "15px" }}
+                    >
                       {label}
                     </FormLabel>
                   </FormControl>
@@ -65,7 +69,10 @@ export const InputDatePicker = forwardRef(
                   <FormControl
                     isInvalid={(meta.touched && meta.error) || isError}
                   >
-                    <FormHelperText color={"gray.400"}>
+                    <FormHelperText
+                      color={"blackAlpha.600"}
+                      fontSize={{ base: "10px", md: "12px", lg: "15px" }}
+                    >
                       La fecha de fin debe de ser superior a la de inicio
                     </FormHelperText>
 

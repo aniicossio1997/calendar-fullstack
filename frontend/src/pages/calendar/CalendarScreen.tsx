@@ -20,15 +20,12 @@ export const CalendarScreen = () => {
   let events = useAppSelector((store) => store.eventsCalendar.events);
 
   useEffect(() => {
-    dispatch(retriveEventsOfUser(stateUserAuth.user.id));
-    moment.locale("es");
-  }, []);
-  useEffect(() => {
     const retriveEvents = async () => {
       await dispatch(retriveEventsOfUser(stateUserAuth.user.id));
     };
     retriveEvents();
-  }, [dispatch]);
+    moment.locale("es");
+  }, []);
 
   return (
     <>

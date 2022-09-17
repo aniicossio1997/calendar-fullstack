@@ -48,7 +48,7 @@ export const FielCustomEvent = ({
                 <FormLabel
                   htmlFor={name}
                   color={"gray.600"}
-                  fontSize={"15px"}
+                  fontSize={{ base: "12", md: "15px" }}
                   textTransform="capitalize"
                 >
                   {label}

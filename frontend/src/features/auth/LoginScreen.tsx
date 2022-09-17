@@ -1,15 +1,11 @@
 import { Container, Text, useColorModeValue } from "@chakra-ui/react";
-import { Formik, Form, FormikHelpers, FormikState } from "formik";
-import { useCallback, useRef, useState } from "react";
+import { Formik, Form, FormikHelpers } from "formik";
+import { useRef } from "react";
 import { InputText } from "../../components/form/InputText";
 import { initialValuesLogin, LoginSchema, IValuesLogin } from "./validate";
 import { dataLogin } from "./dataForm";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { authLogin } from "./authActions";
-import { useNavigate } from "react-router-dom";
 import LayoutBaseForm from "../../components/form/LayoutBaseForm";
-import { retriveEventsOfUser } from "../calendar/eventsActions";
-import { SwalAlertErrorSimple } from "../../components/Alert/SwalAlert";
 import { Link } from "react-router-dom";
 import SimpleAlert from "../../components/Alert/SimpleAlert";
 import useFormLogin from "../../hook/useFormLogin";

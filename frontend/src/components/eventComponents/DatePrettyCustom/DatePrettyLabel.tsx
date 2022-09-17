@@ -18,7 +18,7 @@ export const DatePrettyLabel = ({ label = "" }: IProps) => {
       <Text
         color={"gray.500"}
         display="inline-block"
-        fontSize={{ base: "12px", md: "10px" }}
+        fontSize={{ base: "10px", md: "12px" }}
         textTransform={"capitalize"}
       >
         {labelValue}

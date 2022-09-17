@@ -1,10 +1,10 @@
 import { FormikState } from "formik";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { userRegister } from "../features/auth/authActions";
 import { IValuesRegister } from "../features/auth/validate";
-import { resetMessage, showMessage } from "../features/ui/uiMessageSlice";
+import { showMessage } from "../features/ui/uiMessageSlice";
 import { IBadRequestUser, IUserRegister } from "../ts/interfaces/IUser";
 
 const useFormRegister = () => {

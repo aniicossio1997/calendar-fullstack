@@ -14,21 +14,34 @@ import { Container } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import useEvent from "../../hook/useEvent";
 import InputDateTime from "../form/fieldDateTime/InputDateTime";
+import { openModalReducer } from "../../features/modal/calendarModalSlice";
+import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
+import { authMe } from "../../services/methodHttp";
+import { resetMessage } from "../../features/ui/uiMessageSlice";
+
 interface IProps {
-  events: IEvent[];
+  events?: IEvent[];
 }
-const handleSelectable = (...rest: any) => {
-  console.log("hello");
-  console.log(rest);
-  return false;
-};
 
 const FullCalendarCustom = ({ events }: IProps) => {
   const { handleClick } = useEvent();
+  const stateUserAuth = useAppSelector((store) => store.authState);
+
+  const dispatch = useAppDispatch();
+
+  const handleModal = () => {
+    dispatch(openModalReducer());
+  };
+
   let calendarRef = React.createRef<null | any>();
+  const handleSelectable = (rest: DateSelectArg) => {
+    dispatch(openModalReducer());
+  };
+
   useEffect(() => {
     // console.log(calendarRef);
     return () => {
+      dispatch(resetMessage());
       console.log(calendarRef);
     };
   }, []);
@@ -43,25 +56,25 @@ const FullCalendarCustom = ({ events }: IProps) => {
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
             start: "title", // will normally be on the left. if RTL, will be on the right
-            center: "",
+
             right: "prev,today,next",
           }}
           initialView="dayGridMonth"
           editable={true}
-          selectAllow={handleSelectable}
           selectMirror={true}
           dayMaxEvents={true}
+          select={handleSelectable}
           locale={"es"}
           events={events}
           eventClick={(e) => handleClick(e.event.id)}
-          navLinks={true}
           navLinkWeekClick={() =>
             function (weekStart: any, jsEvent: any) {
               console.log("week start", weekStart.toISOString());
               console.log("coords", jsEvent.pageX, jsEvent.pageY);
             }
           }
-          eventBackgroundColor={"blue"}
+          navLinks={false}
+          selectable={true}
           ref={calendarRef}
         />
       </Container>

@@ -77,3 +77,13 @@
 }
 .datePicker:disabled {
 }
+
+@media only screen and (max-width: 880px) {
+  /* For mobile phones: */
+  input, optgroup{
+    font-size: 15px !important;
+  }
+  .datePicker > * {
+    font-size: 15px !important;
+  }
+}

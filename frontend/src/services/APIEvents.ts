@@ -1,8 +1,9 @@
 import axios from "axios";
 import { IEventPUT } from "../ts/interfaces/ICalendar";
 import { IEventSave } from "../ts/interfaces/IEvents";
-import { baseURI, token } from "./ApiAuth";
-
+import { baseURI } from "./ApiAuth";
+import { LocalStorageService } from "./ServiceLocalStore";
+let token = LocalStorageService.getItem<string>("token");
 export class URIWithTokenEvents {
   httpClient = axios.create({
     baseURL: `${baseURI}`,

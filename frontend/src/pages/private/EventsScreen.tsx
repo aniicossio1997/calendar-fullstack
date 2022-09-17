@@ -21,6 +21,8 @@ import Event from "../../components/eventComponents/Event";
 import NavbarFormEvent from "../../components/eventComponents/NavbarFormEvent";
 import useEvent from "../../hook/useEvent";
 import InputDateTime from "../../components/form/fieldDateTime/InputDateTime";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { initial } from "../../features/events/eventsSlice";
 
 const listVariants = {
   visible: {
@@ -43,6 +45,8 @@ const itemVariants = {
 };
 
 const EventsScreen = () => {
+  const dispatch = useAppDispatch();
+  const eventsOrder = useAppSelector((store) => store.eventsOrder);
   const { events, handleClick } = useEvent();
   const [view, setView] = useState<boolean>(
     LocalStorageService.getItem<boolean>("viewEvents") || false
@@ -60,6 +64,7 @@ const EventsScreen = () => {
     setIsVisible(true);
   };
   useEffect(() => {
+    dispatch(initial(events));
     setIsVisible(true);
     return () => {
       setIsVisible(false);
@@ -82,7 +87,7 @@ const EventsScreen = () => {
               my={4}
               onClick={handleView}
             />
-            <InputDateTime />
+
             <AnimateSharedLayout>
               <AnimatePresence initial={false}>
                 <motion.div
@@ -104,7 +109,7 @@ const EventsScreen = () => {
                     height={"auto"}
                     boxSizing="border-box"
                   >
-                    {events.map((event) => (
+                    {eventsOrder.events.map((event) => (
                       <Event
                         key={event.id}
                         event={event}

@@ -21,21 +21,16 @@ const SimpleAlert = ({ paramsMessage }: IProps) => {
   const storeMessage = useAppSelector((store) => store.uiMessage);
   let message = paramsMessage || storeMessage;
   const dispatch = useAppDispatch();
-  const [visible, setVisible] = useState(true);
   const handleShow = () => {
-    setVisible(!visible);
     dispatch(resetMessage());
   };
-  useEffect(() => {
-    return () => {};
-  }, []);
 
   return (
     <>
-      {message.isShow && visible && (
+      {message.isShow && (
         <Alert
           status={message.type || "warning"}
-          display={visible ? "flex" : "none"}
+          display={message.isShow ? "flex" : "none"}
         >
           <AlertIcon />
           <Box flex="1">

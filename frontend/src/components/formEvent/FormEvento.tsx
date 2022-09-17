@@ -1,9 +1,8 @@
 import { Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import moment from "moment";
-import React, { forwardRef } from "react";
-import { Interface } from "readline";
+import { forwardRef } from "react";
 import { IMessageUI } from "../../features/ui/uiMessageSlice";
+import useEvent from "../../hook/useEvent";
 import useModal from "../../hook/useModal";
 import { IEvent } from "../../ts/interfaces/IEvents";
 import SimpleAlert from "../Alert/SimpleAlert";
@@ -20,25 +19,19 @@ const messageError: IMessageUI = {
   type: "error",
 };
 interface IProps {}
-const FormEvento = forwardRef(({}: IProps, ref) => {
-  const {
-    isErrorDate,
-    titleForm,
-    formValues,
-    activeEvent,
-    handleSubmitForm,
-    handleEditable,
-    isEditable,
-    handleCancelEditable,
-  } = useModal();
+const FormEvento = forwardRef(({}: IProps) => {
+  const { isErrorDate, formValues, activeEvent, isEditable, handleCloseModal } =
+    useModal();
+  const { handleSaveEvent, handleUpdateEvent } = useEvent();
+
   return (
     <>
       <Formik
-        initialValues={formValues as IEvent}
+        initialValues={activeEvent ? activeEvent : (formValues as IEvent)}
         validationSchema={CalendarFormSchema}
-        onSubmit={handleSubmitForm}
+        onSubmit={activeEvent ? handleUpdateEvent : handleSaveEvent}
       >
-        {({ errors, values }) => (
+        {() => (
           <Form>
             {isErrorDate && (
               <>
@@ -52,7 +45,7 @@ const FormEvento = forwardRef(({}: IProps, ref) => {
               Component={InputCustom}
               isRequired={true}
               placeholder="agregar titulo"
-              fontSize={"1.3em"}
+              fontSize={{ base: "16px", md: "1.3em" }}
               isDisabled={Boolean(activeEvent) && !isEditable}
             />
             <InputDatePicker
@@ -79,7 +72,9 @@ const FormEvento = forwardRef(({}: IProps, ref) => {
               Guardar
             </Button>
             {isEditable && activeEvent && (
-              <Button colorScheme={"gray"}>Cancelar</Button>
+              <Button colorScheme={"gray"} onClick={handleCloseModal}>
+                Cancelar
+              </Button>
             )}
           </Form>
         )}
