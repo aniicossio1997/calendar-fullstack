@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken";
 import config from "../config/config";
 
-export const createToken = (id: any, email: string) => {
+export const createToken = (id: string, email: string) => {
   return new Promise((resolve, reject) => {
     const payload = { id, email };
-
     jwt.sign(
       payload,
       config.jwtSecret,

@@ -14,7 +14,7 @@ export const validateUser = async (
 ) => {
   // manejo de errores
   const userIds: IUserId = {
-    header: req.body.uid,
+    header: req.body.id,
     params: req.params.user as unknown as ObjectId,
   };
   try {

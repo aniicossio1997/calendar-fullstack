@@ -11,16 +11,32 @@ interface IEventController {
   start: Date;
   end: Date;
   user_id: ObjectId;
-  uid: ObjectId;
   email: string;
 }
 
 export const getEvents = async (req: Request, res: Response) => {
   const events = await Event.find({ user: req.params.user });
+  console.log(req.query);
+  let search = req.query.search || "";
+  let sort: any = req.query.sort || "rating";
+
+  sort ? (sort = sort.split(",")) : (sort = [sort]);
+
+  let sortBy: any = {};
+  if (sort[1]) {
+    sortBy[sort[0]] = sort[1];
+  } else {
+    sortBy[sort[0]] = "asc";
+  }
+  const auxEvents = await Event.find({
+    title: { $regex: search, $options: "i" },
+    user: req.params.user,
+  }).sort(sortBy);
+
   res.json({
     ok: true,
-    msg: "events of users",
-    events,
+    msg: "User events",
+    events: auxEvents,
   });
 };
 export const getEvent = async (req: Request, res: Response) => {
@@ -66,7 +82,6 @@ export const postEvent = async (req: Request, res: Response) => {
     const endMoment = moment(event_sanitize.end);
     console.log(startMoment, endMoment);
     console.log(!startMoment.isSameOrAfter(endMoment));
-    await comparIdUsers(body.user_id, body.uid);
     const newEvent = new Event(event_sanitize);
     const event = await newEvent.save();
     return res.json({

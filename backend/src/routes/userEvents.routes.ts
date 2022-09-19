@@ -16,7 +16,6 @@ routerUserEvents.use(validateToken);
 routerUserEvents.get(
   "/:user/events",
   param("user").customSanitizer(toObjectId),
-  [validateUser],
   Controller.getEvents
 );
 routerUserEvents.post(
@@ -33,7 +32,7 @@ routerUserEvents.post(
     check("user_id", "el id de usuario debe de ser obligatorio").notEmpty(),
     validate,
     validateDate,
-    validateUser,
+    validateToken,
   ],
 
   Controller.postEvent
@@ -53,9 +52,13 @@ routerUserEvents.put(
     ),
     validate,
     validateDate,
-    validateUser,
+    validateToken,
   ],
   Controller.putEvent
 );
-routerUserEvents.delete("/:user/events/:id", Controller.deleteEvent);
+routerUserEvents.delete(
+  "/:user/events/:id",
+  [validateToken],
+  Controller.deleteEvent
+);
 export default routerUserEvents;

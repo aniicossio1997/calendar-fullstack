@@ -13,7 +13,6 @@ interface IEventController {
   start: Date;
   end: Date;
   user_id: ObjectId;
-  uid: ObjectId;
   email: string;
 }
 export const getAll = async (req: Request, res: Response) => {
@@ -35,9 +34,10 @@ export const getAll = async (req: Request, res: Response) => {
 };
 export const getEvents = async (req: Request, res: Response) => {
   const events = await Event.find();
+
   res.json({
     ok: true,
-    msg: "events",
+    msg: "User Events",
     events,
   });
 };

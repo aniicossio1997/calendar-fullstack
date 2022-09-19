@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Interface } from "readline";
 import config from "../config/config";
-import { IUser } from "../models/userModel";
 
 interface IVerify {
   id: string;
@@ -27,8 +25,7 @@ export const validateToken = (
   const token = authHeader && authHeader.split(" ")[1];
   try {
     const payload = jwt.verify(token, config.jwtSecret) as IVerify;
-    req.body.uid = payload.id;
-    req.body.email = payload.email;
+    console.log("PAYPOAD VALIDATE", payload);
   } catch (error) {
     return res.status(401).json({
       ok: false,
