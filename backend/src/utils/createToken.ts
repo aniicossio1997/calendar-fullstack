@@ -21,3 +21,5 @@ export const createToken = (id: string, email: string) => {
     );
   });
 };
+
+export const createTokenWithRedis = (id: string, email: string) => {};

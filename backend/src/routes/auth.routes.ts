@@ -19,5 +19,5 @@ routerAuth.post(
 
   login
 );
-routerAuth.post("/me", validateToken, authMe);
+routerAuth.post("/me", authMe);
 export default routerAuth;

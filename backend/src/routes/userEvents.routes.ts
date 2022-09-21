@@ -12,7 +12,7 @@ const toObjectId: CustomSanitizer = (value: any) => {
 };
 const routerUserEvents = Router();
 //para validar todos los token
-routerUserEvents.use(validateToken);
+//routerUserEvents.use(validateToken);
 routerUserEvents.get(
   "/:user/events",
   param("user").customSanitizer(toObjectId),
@@ -42,6 +42,7 @@ routerUserEvents.put(
   "/:user/events/:id",
   param("user").customSanitizer(toObjectId),
   [
+    validateToken,
     check("title", "El titulo es obligatorio").notEmpty(),
     check(
       "start",

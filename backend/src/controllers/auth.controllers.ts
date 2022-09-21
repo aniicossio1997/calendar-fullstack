@@ -19,13 +19,19 @@ export const login = async (request: Request, response: Response) => {
     password: request.body.password.trim(),
   } as IUser;
   const user = await User.findOne({ email: body.email });
+  
   const isMatchPassword = user && (await user?.comparePassword(body.password));
   if (isMatchPassword) {
-    return response.status(200).json({
-      ok: true,
-      user: user,
-      token: await createToken(user._id, user.email),
-    });
+    try {
+      let token = await createToken(user._id, user.email);
+      return response.status(200).json({
+        ok: true,
+        user: user,
+        token: token,
+      });
+    } catch (error) {
+      console.log("ERROR: en la creacion de token");
+    }
   }
   response
     .status(404)

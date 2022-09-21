@@ -19,7 +19,15 @@ export const getEvents = async (req: Request, res: Response) => {
   console.log(req.query);
   let search = req.query.search || "";
   let sort: any = req.query.sort || "rating";
-
+  let lessThanToday = req.query.lessThanToday;
+  //todas la fechas no vigentes
+  let greaterThanToday: any =
+    req.query.greaterThanToday || moment().subtract({ year: 100 });
+  //todas la fechas vigentes
+  let sanatizeDateLess = moment(lessThanToday as string);
+  let dateLessThanToday: any = sanatizeDateLess || moment().add({ year: 10 });
+  let ifEmptyLessThanToday = !Boolean(lessThanToday);
+  const date = encodeURIComponent("2015-02-04T05:10:58+05:30");
   sort ? (sort = sort.split(",")) : (sort = [sort]);
 
   let sortBy: any = {};
@@ -28,6 +36,7 @@ export const getEvents = async (req: Request, res: Response) => {
   } else {
     sortBy[sort[0]] = "asc";
   }
+  console.log(sortBy);
   const auxEvents = await Event.find({
     title: { $regex: search, $options: "i" },
     user: req.params.user,

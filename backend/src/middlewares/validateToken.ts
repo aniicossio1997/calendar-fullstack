@@ -23,6 +23,7 @@ export const validateToken = (
     });
   }
   const token = authHeader && authHeader.split(" ")[1];
+  console.log("toquen de validate token: ", token);
   try {
     const payload = jwt.verify(token, config.jwtSecret) as IVerify;
     console.log("PAYPOAD VALIDATE", payload);
