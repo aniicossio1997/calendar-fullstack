@@ -1,15 +1,6 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
-import moment from "moment";
-import { useAppDispatch } from "../../app/hooks";
-import { IEvensCalendar, IEvents } from "../../ts/interfaces/ICalendar";
-import { IEvent, IEventBadRequest } from "../../ts/interfaces/IEvents";
-import { showMessage } from "../ui/uiMessageSlice";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IEvensCalendar } from "../../ts/interfaces/ICalendar";
+import { IEvent } from "../../ts/interfaces/IEvents";
 import {
   deleteAnUserEvent,
   retriveEventsOfUser,
@@ -29,6 +20,7 @@ export interface ICalendar {
     description: string;
     type?: "success" | "error" | null;
   };
+  isModified: boolean;
 }
 const initialState: ICalendar = {
   events: [],
@@ -38,6 +30,7 @@ const initialState: ICalendar = {
     isShow: false,
     description: "",
   },
+  isModified: false,
 };
 const calendarSlice = createSlice({
   name: "eventsCalendar",
@@ -63,6 +56,12 @@ const calendarSlice = createSlice({
       );
       state.activeEvent = null;
     },
+    eventsClear(state) {
+      state.events = [] as IEvent[];
+    },
+    resetIsModified(state) {
+      state.isModified = false;
+    },
   },
   extraReducers: (builder) => {
     builder //authMe
@@ -71,6 +70,7 @@ const calendarSlice = createSlice({
         retriveEventsOfUser.fulfilled,
         (state, action: PayloadAction<IEvent[]>) => {
           state.events = action.payload;
+          state.isModified = true;
         }
       )
       .addCase(retriveEventsOfUser.rejected, (state, action) => {})
@@ -80,6 +80,7 @@ const calendarSlice = createSlice({
         (state, action: PayloadAction<IEvent>) => {
           const eventNew = action.payload;
           state.events = [...state.events, { ...action.payload }];
+          state.isModified = true;
         }
       )
       .addCase(saveEventsOfUser.rejected, (state, action) => {})
@@ -88,7 +89,7 @@ const calendarSlice = createSlice({
           state.events = state.events.filter(
             (event) => event.id !== state.activeEvent?.id
           );
-
+          state.isModified = true;
           state.activeEvent = null;
         }
       })
@@ -99,6 +100,7 @@ const calendarSlice = createSlice({
           state.events = state.events.map((event) =>
             event.id == action.payload.id ? action.payload : event
           );
+          state.isModified = true;
         }
       });
   },
@@ -110,6 +112,8 @@ export const {
   eventUpdated,
   eventActiveChangedToNull,
   eventDeleted,
+  eventsClear,
+  resetIsModified,
 } = calendarSlice.actions;
 
 export default calendarSlice.reducer;

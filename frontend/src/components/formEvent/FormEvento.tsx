@@ -1,6 +1,9 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
+import moment from "moment";
+import "moment/locale/es";
+
 import { Form, Formik } from "formik";
-import { forwardRef } from "react";
+import { createRef, forwardRef, useEffect, useRef, useState } from "react";
 import { IMessageUI } from "../../features/ui/uiMessageSlice";
 import useEvent from "../../hook/useEvent";
 import useModal from "../../hook/useModal";
@@ -23,6 +26,16 @@ const FormEvento = forwardRef(({}: IProps) => {
   const { isErrorDate, formValues, activeEvent, isEditable, handleCloseModal } =
     useModal();
   const { handleSaveEvent, handleUpdateEvent } = useEvent();
+  const [selectedDate, handleDateChange] = useState<string>(
+    moment().format("DD/MM/yyyy").toString()
+  );
+  const [selectedHour, handleHourChange] = useState<any>(new Date());
+
+  const refInputDateStart = createRef();
+  const refInputDateEnd = createRef();
+  useEffect(() => {
+    moment.locale("es");
+  }, []);
 
   return (
     <>
@@ -48,18 +61,24 @@ const FormEvento = forwardRef(({}: IProps) => {
               fontSize={{ base: "16px", md: "1.3em" }}
               isDisabled={Boolean(activeEvent) && !isEditable}
             />
+            <Flex>
+              <Box width={"30%"}></Box>
+            </Flex>
             <InputDatePicker
               name="start"
               label="Fecha de Inicio"
               dateRestric={nowDate.toDate()}
               isError={isErrorDate}
+              ref={refInputDateStart}
             />
             <InputDatePicker
               name="end"
               label="Fecha de Fin"
               dateRestric={endNowDate.toDate()}
               isError={isErrorDate}
+              ref={refInputDateEnd}
             />
+
             <FielCustomEvent
               key={"description"}
               name={"description"}

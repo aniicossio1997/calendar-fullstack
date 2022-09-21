@@ -17,6 +17,7 @@ import { privateDataRoutes } from "../../routes/private.routes";
 import NavItem from "./NavItem";
 import { useAppDispatch } from "../../app/hooks";
 import { logout } from "../../features/auth/authSlice";
+import { eventsClear } from "../../features/calendar/calendarSlice";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -25,6 +26,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const closeSesion = () => {
+    dispatch(eventsClear());
     dispatch(logout());
     navigate("/");
   };

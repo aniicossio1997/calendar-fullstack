@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, useRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { Field } from "formik";
 import {
   Box,
@@ -6,12 +6,12 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  Stack,
 } from "@chakra-ui/react";
-import DateTimePicker from "react-datetime-picker";
-import moment from "moment";
-
-import style from "./style.module.css";
 import "./style.module.css";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import AuxDate from "./AuxDate";
+
 interface IProps {
   name: string;
   label: string;
@@ -20,14 +20,20 @@ interface IProps {
   isEdit?: boolean;
   [x: string]: any;
 }
+interface IField {
+  name: string;
+  onBlur: void;
+  onChange: void;
+  value: null | string | Date;
+}
+
 export const InputDatePicker = forwardRef(
   (
     { name, label, dateRestric, isError = false, isEdit = false }: IProps,
-    ref: Ref<any>
+    ref: any
   ) => {
-    const refInputDate = useRef<any>(null);
+    const [selectedDate, handleDateChange] = useState<Date>(new Date());
     const [isOpen, setIsOpen] = useState(false);
-    //console.log(refInputDate);
     return (
       <>
         <Box my={4}>
@@ -38,6 +44,7 @@ export const InputDatePicker = forwardRef(
                   <FormControl
                     isInvalid={(meta.touched && meta.error) || isError}
                     isRequired
+                    ref={ref}
                   >
                     <FormLabel
                       htmlFor={field.name}
@@ -47,7 +54,9 @@ export const InputDatePicker = forwardRef(
                       {label}
                     </FormLabel>
                   </FormControl>
-                  <DateTimePicker
+                  {console.log(new Date(field.value))}
+                  {console.log("Fiel =>> ", field)}
+                  {/* <DateTimePicker
                     name={field.name}
                     className={[
                       style.datePicker,
@@ -65,7 +74,9 @@ export const InputDatePicker = forwardRef(
                     onCalendarOpen={() => setIsOpen(true)}
                     onCalendarClose={() => setIsOpen(false)}
                     minDate={dateRestric}
-                  />
+                  /> */}
+                  <AuxDate />
+
                   <FormControl
                     isInvalid={(meta.touched && meta.error) || isError}
                   >

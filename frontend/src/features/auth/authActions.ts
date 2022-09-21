@@ -1,7 +1,6 @@
-import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { loginAPI } from "../../services/methodHttp";
-import { LocalStorageService } from "../../services/ServiceLocalStore";
 import { IAuthResult, IBadRequest } from "../../ts/interfaces/IAuth";
 import { IUserLogin, IUserRegister } from "../../ts/interfaces/IUser";
 

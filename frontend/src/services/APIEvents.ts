@@ -3,11 +3,16 @@ import { IEventPUT } from "../ts/interfaces/ICalendar";
 import { IEventSave } from "../ts/interfaces/IEvents";
 import { baseURI } from "./ApiAuth";
 import { LocalStorageService } from "./ServiceLocalStore";
-let token = LocalStorageService.getItem<string>("token");
+
+function getToken() {
+  return LocalStorageService.getItem<string>("token");
+}
 export class URIWithTokenEvents {
   httpClient = axios.create({
     baseURL: `${baseURI}`,
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      Authorization: `Bearer ${LocalStorageService.getItem<string>("token")}`,
+    },
   });
   _endpoint;
 
@@ -39,6 +44,12 @@ export class URIWithTokenEvents {
     //method delete
     return this.httpClient.delete<T>(
       `${this._endpoint}/${idUser}/events/${idEvent}`
+    );
+  }
+  search<T>(idUser: string, idEvent: string, title: string, sort: string) {
+    //buscador y order
+    return this.httpClient.delete<T>(
+      `${this._endpoint}/${idUser}/events?search=${title}&sort=${sort}`
     );
   }
 }

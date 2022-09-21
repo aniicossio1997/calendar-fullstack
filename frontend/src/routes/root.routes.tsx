@@ -13,12 +13,23 @@ import LayoutWithNavbarSidebar from "../layout/private/LayoutWithNavbarSidebar";
 import Landing from "../pages/Landing";
 import LoaderSpinner from "../components/spinner/LoaderSpinner";
 import useRoute from "./useRoute";
+import { LocalStorageService } from "../services/ServiceLocalStore";
 const AppRouter = () => {
   const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { messages, status } = useAppSelector((state) => state.authState);
   const [isClose, setIsClose] = useState(false);
   const { isAuth, isWait, isLogin } = useRoute();
+  const isLoginUser = () => {
+    const toquen = LocalStorageService.getItem<string>("toquen");
+  };
+  useEffect(() => {
+    let isExist = LocalStorageService.getItem<string>("isLogin");
+    if (!isExist) {
+      LocalStorageService.setItem("isLogin", false);
+    }
+    console.log(isExist);
+  }, []);
 
   return (
     <>

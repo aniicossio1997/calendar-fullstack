@@ -1,22 +1,14 @@
-import FullCalendar, {
-  DateSelectArg,
-  DateSpanApi,
-  EventApi,
-  EventClickArg,
-} from "@fullcalendar/react";
-import React, { memo, useEffect } from "react";
+import FullCalendar, { DateSelectArg } from "@fullcalendar/react";
+import React, { useEffect } from "react";
 import { IEvent } from "../../ts/interfaces/IEvents";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import "./styleFullCalendar.css";
 import { Container } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import useEvent from "../../hook/useEvent";
-import InputDateTime from "../form/fieldDateTime/InputDateTime";
 import { openModalReducer } from "../../features/modal/calendarModalSlice";
-import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
-import { authMe } from "../../services/methodHttp";
 import { resetMessage } from "../../features/ui/uiMessageSlice";
 
 interface IProps {
@@ -25,14 +17,7 @@ interface IProps {
 
 const FullCalendarCustom = ({ events }: IProps) => {
   const { handleClick } = useEvent();
-  const stateUserAuth = useAppSelector((store) => store.authState);
-
   const dispatch = useAppDispatch();
-
-  const handleModal = () => {
-    dispatch(openModalReducer());
-  };
-
   let calendarRef = React.createRef<null | any>();
   const handleSelectable = (rest: DateSelectArg) => {
     dispatch(openModalReducer());
@@ -42,7 +27,6 @@ const FullCalendarCustom = ({ events }: IProps) => {
     // console.log(calendarRef);
     return () => {
       dispatch(resetMessage());
-      console.log(calendarRef);
     };
   }, []);
 

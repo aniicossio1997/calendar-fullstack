@@ -22,19 +22,43 @@ const orderBySort = (events: IEvent[]) => {
     return 0;
   });
 };
+const checkDesc = (fa: string, fb: string) => {
+  if (fa > fb) {
+    return -1;
+  }
+  if (fa < fb) {
+    return 1;
+  }
+  return 0;
+};
 const orderByDesc = (events: IEvent[]) => {
   return events.sort((a, b) => {
-    let fa = a.title.toLowerCase(),
+    let fa = a.title.toLowerCase().toString(),
       fb = b.title.toLowerCase();
 
-    if (fa > fb) {
-      return -1;
-    }
-    if (fa < fb) {
-      return 1;
-    }
-    return 0;
+    return checkDesc(fa, fb);
   });
+};
+const orderById = (events: IEvent[]) => {
+  return events.sort((a, b) => {
+    let e1 = a.id as string;
+    let e2 = b.id as string;
+    return checkDesc(e1, e2);
+  });
+};
+
+const orderbyDateDesc = (events: IEvent[]) => {
+  return events.sort(
+    (objA, objB) =>
+      new Date(objB.start).getTime() - new Date(objA.start).getTime()
+  );
+};
+const orderbyDateAsc = (events: IEvent[]) => {
+  const sortedAsc = events.sort(
+    (objA, objB) =>
+      new Date(objA.start).getTime() - new Date(objB.start).getTime()
+  );
+  return sortedAsc;
 };
 const eventsSlice = createSlice({
   name: "modalReducer",
@@ -43,15 +67,19 @@ const eventsSlice = createSlice({
     initial(state, action: PayloadAction<IEvent[]>) {
       state.events = action.payload;
     },
-    eventsOrderedbySort(state, action: PayloadAction<IEvent[]>) {
-      const auxEvents = [...action.payload];
-      state.events = orderBySort(auxEvents);
+    eventsOrderedByAsc(state, action: PayloadAction<IEvent[]>) {
+      state.events = orderBySort(state.events);
     },
-    eventsOrderedbyDesc(state, action: PayloadAction<IEvent[]>) {
-      const auxEvents = [...action.payload];
-      state.events = orderByDesc(auxEvents);
+    eventsOrderedByDesc(state, action: PayloadAction<IEvent[]>) {
+      state.events = orderByDesc(state.events);
     },
-    eventsActive(state, action: PayloadAction<IEvent[]>) {
+    eventsOrderedByDateDesc(state, action: PayloadAction<IEvent[]>) {
+      state.events = orderbyDateDesc(state.events);
+    },
+    eventsOrderedByDateAsc(state, action: PayloadAction<IEvent[]>) {
+      state.events = orderbyDateAsc(state.events);
+    },
+    eventsCurrent(state, action: PayloadAction<IEvent[]>) {
       state.events = action.payload.filter((event) =>
         moment(new Date()).isSameOrBefore(moment(event.start))
       );
@@ -65,9 +93,11 @@ const eventsSlice = createSlice({
 });
 export const {
   initial,
-  eventsOrderedbySort,
-  eventsOrderedbyDesc,
-  eventsActive,
+  eventsOrderedByAsc,
+  eventsOrderedByDesc,
+  eventsCurrent,
   eventsPast,
+  eventsOrderedByDateAsc,
+  eventsOrderedByDateDesc,
 } = eventsSlice.actions;
 export default eventsSlice.reducer;

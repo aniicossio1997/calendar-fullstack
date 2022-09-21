@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { auth } from "../../services/methodHttp";
 import { LocalStorageService } from "../../services/ServiceLocalStore";
 import { IAuthResult, IBadRequest } from "../../ts/interfaces/IAuth";
 import { IBadRequestUser, IUser } from "../../ts/interfaces/IUser";
@@ -36,6 +37,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout(state: IStateInitial) {
+      LocalStorageService.setItem("isLogin", false);
       localStorage.clear();
       state.isLogin = false;
       state.user = {
@@ -44,6 +46,7 @@ const authSlice = createSlice({
         id: "",
       };
     },
+
     resetMessage(state: IStateInitial) {
       state.messages = initailMsg;
     },
@@ -61,12 +64,14 @@ const authSlice = createSlice({
           "token-init-date",
           new Date().getTime().toString()
         );
+        LocalStorageService.setItem("isLogin", true);
 
         state.isLogin = true;
       })
       .addCase(authLogin.rejected, (state, { error }) => {
         state.status = "failed";
         state.isLogin = false;
+        LocalStorageService.setItem("isLogin", false);
         state.messages = {
           type: "error",
           show: true,
@@ -76,14 +81,17 @@ const authSlice = createSlice({
       //authMe
       .addCase(authMe.pending, (state, action) => {
         state.status = "pending";
+        LocalStorageService.setItem("isLogin", false);
         state.messages = {} as IMessage;
       })
       .addCase(authMe.fulfilled, (state, action) => {
         state.status = "succeeded";
+        LocalStorageService.setItem("isLogin", true);
         state.isLogin = true;
         state.user = (action.payload as IAuthResult).user;
       })
       .addCase(authMe.rejected, (state, action) => {
+        LocalStorageService.setItem("isLogin", false);
         state.status = "failed";
         state.user = { email: "", id: "", name: "" };
         state.isLogin = false;

@@ -1,6 +1,6 @@
 import { EventClickArg } from "@fullcalendar/react";
 import { FormikHelpers } from "formik";
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   SwalAlertDelete,
@@ -16,24 +16,20 @@ import {
   saveEventsOfUser,
   updateAnUserEvent,
 } from "../features/calendar/eventsActions";
+import { initial } from "../features/events/eventsSlice";
 import {
   closeModalReducer,
   openModalReducer,
 } from "../features/modal/calendarModalSlice";
-import { resetMessage, showMessage } from "../features/ui/uiMessageSlice";
+import { showMessage } from "../features/ui/uiMessageSlice";
 import { IEvent, IEventSave } from "../ts/interfaces/IEvents";
-import useModal from "./useModal";
-interface IProps {
-  events?: IEvent[];
-}
+
 const useEvent = () => {
   const dispatch = useAppDispatch();
   const { activeEvent, events } = useAppSelector(
     (store) => store.eventsCalendar
   );
   const user = useAppSelector((state) => state.authState.user);
-  const { handleCloseModal } = useModal();
-
   const handleSeletedEvent = (e: EventClickArg) => {
     let id = e.event.id;
     const anEvent = events.find((e) => e.id === id);
@@ -46,7 +42,18 @@ const useEvent = () => {
       });
     }
   };
-
+  const resetEvents = async () => {
+    const retriveEvents = async () => {
+      await (
+        await dispatch(retriveEventsOfUser(user.id))
+      ).payload;
+    };
+    await retriveEvents();
+    const pathCurrent = window.location.pathname;
+    if (pathCurrent === "/calendar/events") {
+      dispatch(initial(events));
+    }
+  };
   const deleteEvent = async () => {
     try {
       const result = await dispatch(
@@ -62,6 +69,7 @@ const useEvent = () => {
             description: `Se elimino el evento ${result.title}`,
           })
         );
+        resetEvents();
       }
     } catch (error) {
       dispatch(
@@ -106,6 +114,7 @@ const useEvent = () => {
             description: `Se creo el evento exitosamente ${result.title}`,
           })
         );
+        resetEvents();
         resetForm();
         dispatch(closeModalReducer());
       }
@@ -141,8 +150,10 @@ const useEvent = () => {
               description: `Se actualizo el evento exitosamente ${response.title}`,
             })
           );
+
           resetForm();
           dispatch(closeModalReducer());
+          resetEvents();
         }
       } catch (error) {
         console.log(error);

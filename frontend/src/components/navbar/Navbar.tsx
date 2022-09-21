@@ -3,12 +3,9 @@ import {
   Stack,
   Heading,
   Flex,
-  Button,
   useDisclosure,
   useColorModeValue,
   Icon,
-  Link,
-  Text,
 } from "@chakra-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
 import ItemLink from "./ItemLink";
@@ -19,7 +16,7 @@ import { privateDataRoutes } from "../../routes/private.routes";
 import { logout } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Fragment } from "react";
-import { MdLogout } from "react-icons/md";
+import { eventsClear } from "../../features/calendar/calendarSlice";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +28,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const closeSesion = () => {
     dispatch(logout());
+    dispatch(eventsClear());
     navigate("/login");
   };
 

@@ -1,9 +1,5 @@
 import axios from "axios";
-import {
-  IUserLogin,
-  IUserRegister,
-  IUserRevalidate,
-} from "../ts/interfaces/IUser";
+import { IUserLogin, IUserRegister } from "../ts/interfaces/IUser";
 import { LocalStorageService } from "./ServiceLocalStore";
 
 export const baseURI = process.env.REACT_APP_API_URL;
@@ -35,6 +31,7 @@ export default class URIAuth {
   }
   me() {
     //method post api/auth/me
+    let token = LocalStorageService.getItem<string>("token");
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };

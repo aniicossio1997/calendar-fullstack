@@ -1,0 +1,16 @@
+.fc .fc-popover{
+ z-index: 20 !important;
+}
+.fc-event-time, .fc-daygrid-event-dot{
+    display: none !important;
+}
+.fc-h-event{
+    padding-left: 3px !important;
+}
+input[type="search"]{
+    border-color: darkgray !important;
+}
+input[type="search"]:focus{
+    border-color: #3182ce !important;
+    box-shadow: #3182ce !important;
+}

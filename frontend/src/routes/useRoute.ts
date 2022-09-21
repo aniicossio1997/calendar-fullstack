@@ -34,7 +34,7 @@ const useRoute = () => {
       isAuthenticated();
       setIsWait(false);
       console.log("is auth: ", isAuth);
-    }, 4000);
+    }, 1000);
     return () => {
       clearTimeout(timeout);
     };

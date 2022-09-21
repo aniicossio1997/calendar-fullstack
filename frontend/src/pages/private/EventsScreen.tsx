@@ -7,20 +7,13 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import BaseCalendar from "../../components/calendar/BaseCalendar";
-import {
-  AnimatePresence,
-  AnimateSharedLayout,
-  motion,
-  VariantLabels,
-} from "framer-motion";
-import { BsFillGrid3X3GapFill, BsFillHddStackFill } from "react-icons/bs";
-import { TiThMenu, TiThMenuOutline } from "react-icons/ti";
-
+import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
+import { BsFillGrid3X3GapFill } from "react-icons/bs";
+import { TiThMenu } from "react-icons/ti";
 import { LocalStorageService } from "../../services/ServiceLocalStore";
 import Event from "../../components/eventComponents/Event";
-import NavbarFormEvent from "../../components/eventComponents/NavbarFormEvent";
+import FilterFormEvent from "../../components/eventComponents/FilterFormEvent";
 import useEvent from "../../hook/useEvent";
-import InputDateTime from "../../components/form/fieldDateTime/InputDateTime";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { initial } from "../../features/events/eventsSlice";
 
@@ -76,7 +69,7 @@ const EventsScreen = () => {
       <BaseCalendar>
         <Flex justify={"flex-start"} width={"100%"}>
           <Container maxW="100%">
-            <NavbarFormEvent />
+            <FilterFormEvent />
             <IconButton
               display={{ base: "none", md: "flex" }}
               aria-label="view"
