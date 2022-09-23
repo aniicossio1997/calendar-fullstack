@@ -42,7 +42,6 @@ routerUserEvents.put(
   "/:user/events/:id",
   param("user").customSanitizer(toObjectId),
   [
-    validateToken,
     check("title", "El titulo es obligatorio").notEmpty(),
     check(
       "start",

@@ -28,8 +28,8 @@ export const validateDate = async (
     moment(dateStart).isSameOrAfter(endMoment)
   );
   try {
-    console.log(startMoment.isSameOrAfter(endMoment));
-    if (startMoment.isSameOrAfter(endMoment)) {
+    console.log(!endMoment.isSameOrAfter(startMoment));
+    if (!endMoment.isSameOrAfter(startMoment)) {
       throw new Error(
         "[ ERROR Evento => La fecha de fin debe ser superior a la de inicio"
       );
