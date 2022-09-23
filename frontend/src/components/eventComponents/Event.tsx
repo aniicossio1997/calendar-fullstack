@@ -1,9 +1,7 @@
-import { Box, Heading, Icon, Text, Tooltip } from "@chakra-ui/react";
-import React from "react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { IEvent } from "../../ts/interfaces/IEvents";
-import { GrEdit } from "react-icons/gr";
 import { AnimatePresence, motion } from "framer-motion";
-import { DatePretty } from "./DatePrettyCustom/DatePretty";
+import DatePrettySimple from "./DatePrettyCustom/DatePrettySimple";
 
 interface IProps {
   event: IEvent;
@@ -35,14 +33,8 @@ const Event = ({ event, handleClick }: IProps) => {
           >
             {event.description}
           </Text>
-          <DatePretty datePretty={{ date: event.start, label: "start" }}>
-            <DatePretty.Label label={"inicio"} />
-            <DatePretty.Date date={event.start} />
-          </DatePretty>
-          <DatePretty datePretty={{ date: event.start, label: "end" }}>
-            <DatePretty.Label label={"fin"} />
-            <DatePretty.Date date={event.end} />
-          </DatePretty>
+          <DatePrettySimple date={event.start} title="Inicio" />
+          <DatePrettySimple date={event.end} title="Fin" />
         </Box>
       </AnimatePresence>
     </>

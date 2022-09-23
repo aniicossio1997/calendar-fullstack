@@ -1,12 +1,14 @@
 import { EventClickArg } from "@fullcalendar/react";
 import { FormikHelpers } from "formik";
-import { useEffect } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   SwalAlertDelete,
   SwalAlertErrorSimple,
 } from "../components/Alert/SwalAlert";
 import {
+  activeIsModified,
   eventActiveChangedToNull,
   eventSetActive,
 } from "../features/calendar/calendarSlice";
@@ -26,6 +28,8 @@ import { IEvent, IEventSave } from "../ts/interfaces/IEvents";
 
 const useEvent = () => {
   const dispatch = useAppDispatch();
+  const [isErrorDate, setIsErrorDate] = useState(false);
+
   const { activeEvent, events } = useAppSelector(
     (store) => store.eventsCalendar
   );
@@ -51,6 +55,7 @@ const useEvent = () => {
     await retriveEvents();
     const pathCurrent = window.location.pathname;
     if (pathCurrent === "/calendar/events") {
+      dispatch(activeIsModified());
       dispatch(initial(events));
     }
   };
@@ -141,6 +146,12 @@ const useEvent = () => {
         user: activeEvent.user,
         id: activeEvent.id,
       };
+      setIsErrorDate(false);
+      const startMoment = moment(values.start);
+      const endMoment = moment(values.end);
+      if (!startMoment.isSameOrAfter(endMoment)) {
+        console.log("las fechas no coinciden");
+      }
       try {
         const response = await dispatch(updateAnUserEvent(event)).unwrap();
         if (response.title) {

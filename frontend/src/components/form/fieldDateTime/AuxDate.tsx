@@ -1,26 +1,50 @@
-import * as React from "react";
-import dayjs, { Dayjs } from "dayjs";
-
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Text } from "@chakra-ui/react";
+import { useState } from "react";
+import "moment/locale/es";
 
-export default function AuxDate() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+import moment from "moment";
+import MomentUtils from "@date-io/moment";
+import {
+  DatePicker,
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+
+moment.locale("es"); // it is required to select default locale manually
+
+interface IFuntionChanged {
+  (newValue: Date | null): void;
+}
+interface IProps {
+  value?: Date | null;
+  minDate?: Date | null;
+  funtionChanged?: IFuntionChanged;
+}
+export default function AuxDate({}: IProps) {
+  const [selectedDate, handleDateChange] = useState(new Date());
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MobileDatePicker
-        label="For mobile"
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        renderInput={(params) => <Text {...params} />}
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <KeyboardDateTimePicker
+        variant="inline"
+        ampm={false}
+        label="With keyboard"
+        value={selectedDate}
+        onError={console.log}
+        disablePast
+        format="DD/MM/yyyy HH:mm"
+        onChange={(value) =>
+          console.log(moment(value).format("DD/MM/yyyy HH:mm"))
+        }
       />
-    </LocalizationProvider>
+    </MuiPickersUtilsProvider>
   );
 }
+
+// import React from "react";
+
+// const AuxDate = () => {
+//   return <div>AuxDate</div>;
+// };
+
+// export default AuxDate;

@@ -44,7 +44,7 @@ const options_order: IOption[] = [
 ];
 const FilterFormEvent = () => {
   const dispatch = useAppDispatch();
-  const { isModified } = useAppSelector((store) => store.eventsCalendar);
+  const { isModifiqueEvents } = useAppSelector((store) => store.eventsCalendar);
   const stateUserAuth = useAppSelector((store) => store.authState);
 
   const {

@@ -5,7 +5,7 @@ import {
   IconButton,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BaseCalendar from "../../components/calendar/BaseCalendar";
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
@@ -16,6 +16,10 @@ import FilterFormEvent from "../../components/eventComponents/FilterFormEvent";
 import useEvent from "../../hook/useEvent";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { initial } from "../../features/events/eventsSlice";
+import { resetIsModified } from "../../features/calendar/calendarSlice";
+import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
+import { IEvent } from "../../ts/interfaces/IEvents";
+import { resetMessage } from "../../features/ui/uiMessageSlice";
 
 const listVariants = {
   visible: {
@@ -40,6 +44,13 @@ const itemVariants = {
 const EventsScreen = () => {
   const dispatch = useAppDispatch();
   const eventsOrder = useAppSelector((store) => store.eventsOrder);
+  const isModifiqueEvents = useAppSelector(
+    (store) => store.eventsCalendar.isModifiqueEvents
+  );
+  const { user } = useAppSelector((store) => store.authState);
+  const eventsPrincipal = useAppSelector(
+    (store) => store.eventsCalendar.events
+  );
   const { events, handleClick } = useEvent();
   const [view, setView] = useState<boolean>(
     LocalStorageService.getItem<boolean>("viewEvents") || false
@@ -47,6 +58,7 @@ const EventsScreen = () => {
 
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isAnimate, setIsAnimate] = useState<boolean>(false);
+  const componentWillUnmount = useRef(null);
 
   const handleView = () => {
     setIsVisible((prevValue) => !prevValue);
@@ -60,14 +72,29 @@ const EventsScreen = () => {
     dispatch(initial(events));
     setIsVisible(true);
     return () => {
-      setIsVisible(false);
+      dispatch(resetMessage());
     };
   }, []);
+  useEffect(() => {
+    if (isModifiqueEvents) {
+      setIsVisible(false);
+      getEvents();
+      dispatch(resetIsModified());
+    }
+    return () => {};
+  }, [isModifiqueEvents]);
+
+  const getEvents = async () => {
+    let aux_events = (await (
+      await dispatch(retriveEventsOfUser(user.id))
+    ).payload) as IEvent[];
+    dispatch(initial(aux_events));
+  };
 
   return (
     <>
       <BaseCalendar>
-        <Flex justify={"flex-start"} width={"100%"}>
+        <Flex justify={"flex-start"} width={"100%"} ref={componentWillUnmount}>
           <Container maxW="100%">
             <FilterFormEvent />
             <IconButton
@@ -83,15 +110,8 @@ const EventsScreen = () => {
 
             <AnimateSharedLayout>
               <AnimatePresence initial={false}>
-                <motion.div
-                  initial="hidden"
-                  variants={listVariants}
-                  animate={isVisible ? "visible" : "hidden"}
-                >
+                <motion.div>
                   <SimpleGrid
-                    as={motion.div}
-                    initial="hidden"
-                    variants={listVariants}
                     columns={{ base: 1, md: view ? 1 : 2, xl: view ? 1 : 3 }}
                     transitionDuration={"2"}
                     spacing={{ base: 4, lg: 6 }}

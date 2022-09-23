@@ -6,9 +6,10 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { Field } from "formik";
+import { Field, FormikErrors } from "formik";
 import React from "react";
 import { useAppSelector } from "../../../app/hooks";
+import { IEvent } from "../../../ts/interfaces/IEvents";
 import "../style.css";
 interface Props {
   label: string;
@@ -18,6 +19,8 @@ interface Props {
   isDisabled?: boolean;
   [x: string]: any;
   Component: typeof Input | typeof Textarea | React.ReactChildren;
+  valuesForm?: IEvent;
+  errorStart?: FormikErrors<Date> | undefined;
 }
 const RequiredText = () => {
   return <span style={{ color: "red" }}> *</span>;
@@ -29,6 +32,8 @@ export const FielCustomEvent = ({
   isRequired = true,
   isError = false,
   isDisabled = false,
+  valuesForm = {} as IEvent,
+  errorStart = undefined,
   ...rest
 }: Props) => {
   const activeEvent = useAppSelector(

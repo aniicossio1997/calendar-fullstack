@@ -14,3 +14,6 @@ input[type="search"]:focus{
     border-color: #3182ce !important;
     box-shadow: #3182ce !important;
 }
+input[type="datetime-local"]{
+    
+}

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { resetIsModified } from "../features/calendar/calendarSlice";
 import { retriveEventsOfUser } from "../features/calendar/eventsActions";
 import {
   eventsCurrent,
@@ -47,7 +46,7 @@ const useFilter = () => {
   const dispatch = useAppDispatch();
   const stateUserAuth = useAppSelector((store) => store.authState);
   const { events } = useEvent();
-  const { isModified } = useAppSelector((store) => store.eventsCalendar);
+  const { isModifiqueEvents } = useAppSelector((store) => store.eventsCalendar);
 
   const [ifChangeOrder, setIfChangeOrder] = useState(false);
   const [ifChangeFilter, setIfChangeFilter] = useState(false);
