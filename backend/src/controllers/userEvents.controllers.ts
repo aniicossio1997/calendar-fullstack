@@ -1,8 +1,7 @@
 //todas deben ser protegidas
 import { Request, Response } from "express";
-import Event from "../models/eventModel";
-import { ObjectId } from "mongoose";
-import { comparIdUsers } from "../utils/comparIdUsers";
+import Event, { IEvent } from "../models/eventModel";
+import { ObjectId, Types } from "mongoose";
 import moment from "moment";
 
 interface IEventController {
@@ -13,9 +12,21 @@ interface IEventController {
   user_id: ObjectId;
   email: string;
 }
+const compere = (a: string, b: string) => {
+  if (a == b) {
+    return 0;
+  }
+  if (a < b) {
+    return -1;
+  }
+  return 1;
+};
 
 export const getEvents = async (req: Request, res: Response) => {
-  const events = await Event.find({ user: req.params.user });
+  ///   api/users/userId/events?sort=end,asc
+  //    events?search=hel&sort=end,asc
+  let id_user = req.params.user;
+  const events = await Event.find({ user: id_user });
   console.log(req.query);
   let search = req.query.search || "";
   let sort: any = req.query.sort || "rating";
@@ -36,11 +47,22 @@ export const getEvents = async (req: Request, res: Response) => {
   } else {
     sortBy[sort[0]] = "asc";
   }
-  console.log(sortBy);
-  const auxEvents = await Event.find({
+
+  console.log("sort by: ", sort[1]);
+  let auxEvents: (IEvent & {
+    _id: Types.ObjectId;
+  })[] = await Event.find({
     title: { $regex: search, $options: "i" },
     user: req.params.user,
   }).sort(sortBy);
+
+  if (sort[0] !== "start" && sort[0] !== "end") {
+    auxEvents.sort((e1, e2) => {
+      let a = e1.title.toLocaleLowerCase();
+      let b = e2.title.toLocaleLowerCase();
+      return sort[1] === "asc" ? compere(a, b) : compere(b, a);
+    });
+  }
 
   res.json({
     ok: true,
@@ -107,6 +129,7 @@ export const postEvent = async (req: Request, res: Response) => {
   }
 };
 export const putEvent = async (req: Request, res: Response) => {
+  //update
   const body = req.body as IEventController;
   const event_sanitize = {
     title: body.title,

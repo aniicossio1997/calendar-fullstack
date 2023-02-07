@@ -3,7 +3,7 @@ config();
 const secret = "somesecrettokeny_mind_still_123";
 export default {
   DB: {
-    MONGO_URI: process.env.MONGODB_URI || "mongodb://localhost:27017/calendar",
+    MONGO_URI: process.env.MONGO_URI || "mongodb://localhost:27017/calendar",
     MONGO_USER: "",
     MONGO_PASSWORD: "",
     MONGO_DATABASE: "calendar",

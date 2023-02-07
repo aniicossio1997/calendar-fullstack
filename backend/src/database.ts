@@ -2,8 +2,14 @@ import mongoose from "mongoose";
 import config from "./config/config";
 
 (async () => {
+  const connectionParams={
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true 
+}
   try {
     const db = await mongoose.connect(config.DB.MONGO_URI);
+    
     db.connection
       .on("error", (err) => {
         console.log(`There was an error connecting to the database: ${err}`);

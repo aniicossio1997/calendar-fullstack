@@ -54,16 +54,15 @@ export const authMe = async (req: Request, response: Response) => {
     });
   }
   const token = authHeader && authHeader.split(" ")[1];
-
   try {
     const payload = jwt.verify(token, config.jwtSecret) as IVerify;
+    console.log(payload)
     const auxUser = {
       id: payload.id,
       email: payload.email,
     } as IUser;
     console.log("PAYPOAD VALIDATE", payload);
     const user = await User.findOne({ email: auxUser.email });
-    console.log("PAYLOAD ID:", payload.id.toString());
 
     return response.status(200).json({
       ok: true,
@@ -75,9 +74,15 @@ export const authMe = async (req: Request, response: Response) => {
       },
     });
   } catch (error) {
+    
     return response.status(401).json({
       ok: false,
       msg: "Token no válido",
+      user:{
+        id:"",
+        email:"",
+        name:""
+      }
     });
   }
 };

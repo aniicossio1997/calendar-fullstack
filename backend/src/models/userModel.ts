@@ -24,13 +24,13 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  events: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Event",
-      required: false,
-    },
-  ],
+  // events: [
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: "Event",
+  //     required: false,
+  //   },
+  // ],
 });
 userSchema.pre<IUser>("save", async function (next) {
   const user = this;
