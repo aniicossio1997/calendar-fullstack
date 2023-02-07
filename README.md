@@ -50,3 +50,14 @@
 - react-datetime-picker
 - moment
 - react-icons-
+**Register Screen**
+![enter image description here](https://raw.githubusercontent.com/aniicossio1997/calendar-fullstack/main/register.png)
+
+**Login Screen**
+![enter image description here](https://raw.githubusercontent.com/aniicossio1997/calendar-fullstack/main/login.png)
+
+**Calendar Screen**
+![enter image description here](https://raw.githubusercontent.com/aniicossio1997/calendar-fullstack/main/calendario.png)
+
+**Eventos**
+![enter image description here](https://raw.githubusercontent.com/aniicossio1997/calendar-fullstack/main/eventos.png)
