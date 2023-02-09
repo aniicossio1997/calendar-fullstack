@@ -22,7 +22,7 @@ const PublicRoute = ({ children, setError, isAuth = false }: IProps) => {
     isAuthenticated();
   }, [dispatch, setIsLogin]);
 
-  return isAuth ? <Navigate to={"/calendar"} replace /> : children;
+  return isAuth ? <Navigate to={"/"} replace /> : children;
   //return children;
 };
 

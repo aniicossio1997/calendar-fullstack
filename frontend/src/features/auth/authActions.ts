@@ -1,8 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { loginAPI } from "../../services/methodHttp";
-import { IAuthResult, IBadRequest } from "../../ts/interfaces/IAuth";
+import { IAuthMeResult, IAuthResult, IBadRequest } from "../../ts/interfaces/IAuth";
 import { IUserLogin, IUserRegister } from "../../ts/interfaces/IUser";
+import { logout, resetDataUser, startLoadingAuthMe } from "./authSlice";
+import { AppDispatch } from "../../app/store";
 
 export const authLogin = createAsyncThunk(
   "auth/login",
@@ -41,3 +43,16 @@ export const userRegister = createAsyncThunk(
     }
   }
 );
+
+export const authMev2=()=>{
+  return async(dispatch:AppDispatch,getState:any )=>{
+    dispatch(startLoadingAuthMe)
+    const res = await loginAPI.me();
+   const dataUser=(res.data as IAuthMeResult )
+    dispatch(resetDataUser(dataUser.user))
+    dispatch(startLoadingAuthMe)
+    if(dataUser.ok===false){
+      dispatch(logout())
+    }
+  }
+}

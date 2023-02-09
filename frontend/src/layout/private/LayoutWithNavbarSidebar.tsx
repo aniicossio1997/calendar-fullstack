@@ -17,8 +17,6 @@ import SidebarContent from "./SidebarContent";
 import { Outlet } from "react-router-dom";
 import { ImMenu } from "react-icons/im";
 import DrawerMenu from "./DrawerMenu";
-import { authMe } from "../../features/auth/authActions";
-import { motion } from "framer-motion";
 
 export default function LayoutWithNavbarSidebar() {
   const dispatch = useAppDispatch();
@@ -28,12 +26,6 @@ export default function LayoutWithNavbarSidebar() {
   const [isClose, setIsClose] = useState(false);
   const drawer = useDisclosure();
   const btnRef = useRef(null);
-  useEffect(() => {
-    const retriveEvents = async () => {
-      await dispatch(authMe());
-    };
-    retriveEvents();
-  }, []);
 
   useEffect(() => {
     if (messages.show) {

@@ -34,7 +34,7 @@ const useFormRegister = () => {
               description: `Se ha creado el usuario exitosamente`,
             })
           );
-          navigate("/");
+          navigate("/login");
         })
         .catch((error: IBadRequestUser) => {
           console.log(error);

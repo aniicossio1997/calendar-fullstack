@@ -3,6 +3,10 @@ import {
   Flex,
   Icon,
   IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Select,
   SimpleGrid,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
@@ -12,54 +16,101 @@ import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { TiThMenu } from "react-icons/ti";
 import { LocalStorageService } from "../../services/ServiceLocalStore";
 import Event from "../../components/eventComponents/Event";
-import FilterFormEvent from "../../components/eventComponents/FilterFormEvent";
 import useEvent from "../../hook/useEvent";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { initial } from "../../features/events/eventsSlice";
-import { resetIsModified } from "../../features/calendar/calendarSlice";
 import { retriveEventsOfUser } from "../../features/calendar/eventsActions";
 import { IEvent } from "../../ts/interfaces/IEvents";
 import { resetMessage } from "../../features/ui/uiMessageSlice";
+import { useSearchParams } from "react-router-dom";
+import { useFetch } from "../../hook/useFetch";
+import { BiSearch, BiSortAlt2 } from "react-icons/bi";
 
-const listVariants = {
-  visible: {
-    opacity: 1,
-    transition: {
-      when: "beforeChildren",
-      staggerChildren: 0.3,
-    },
-  },
-  hidden: {
-    opacity: 0,
-    transition: {
-      when: "afterChildren",
-    },
-  },
+export const orderBy = {
+  EVENTS_ASC: "A-Z",
+  EVENTS_DESC: "Z-A",
+  EVENTS_DATE_ASC: "Date ▲",
+  EVENTS_DATE_DESC: "Date ▼",
+  EVENTS_INITIAL_ORDER: "Order",
 };
-const itemVariants = {
-  visible: { opacity: 1, x: 0 },
-  hidden: { opacity: 0, x: -100 },
+export const filterBy = {
+  EVENTS_INITIAL_ALL: "Events",
+  EVENTS_CURRENT: "current",
+  EVENTS_PAST: "past",
 };
+interface IOption {
+  label: string;
+  value: string;
+}
+const options_filter: IOption[] = [
+  { label: filterBy.EVENTS_PAST, value: filterBy.EVENTS_PAST },
+  { label: filterBy.EVENTS_CURRENT, value: filterBy.EVENTS_CURRENT },
+];
+
+const options_order = [
+  { label: orderBy.EVENTS_ASC, value: "title,asc" },
+  {
+    label: orderBy.EVENTS_DESC,
+    value: "title,desc",
+  },
+  {
+    label: orderBy.EVENTS_DATE_ASC,
+    value: "start,asc",
+  },
+  {
+    label: orderBy.EVENTS_DATE_DESC,
+    value: "start,desc",
+  },
+];
 
 const EventsScreen = () => {
   const dispatch = useAppDispatch();
-  const eventsOrder = useAppSelector((store) => store.eventsOrder);
-  const isModifiqueEvents = useAppSelector(
-    (store) => store.eventsCalendar.isModifiqueEvents
-  );
   const { user } = useAppSelector((store) => store.authState);
-  const eventsPrincipal = useAppSelector(
-    (store) => store.eventsCalendar.events
-  );
   const { events, handleClick } = useEvent();
   const [view, setView] = useState<boolean>(
     LocalStorageService.getItem<boolean>("viewEvents") || false
   );
-
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isAnimate, setIsAnimate] = useState<boolean>(false);
   const componentWillUnmount = useRef(null);
 
+  let [params, setParams] = useSearchParams();
+  const [orderValueType, setOrderValueType] = useState("");
+  const [filterOrderValue, setFilterOrderValue] = useState("");
+
+  const { data, error, loading, fetchData } = useFetch(
+    `http://localhost:8000/api/users/${user.id.toString()}/events`,
+    false
+  );
+
+  const handleAddSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let search = e.target.value;
+    console.log(search);
+    if (search) {
+      params.set("search", search);
+      setParams(params);
+    } else {
+      params.delete("search");
+      setParams(params);
+    }
+  };
+  const handleAddSort = (value: React.ChangeEvent<HTMLSelectElement>) => {
+    let order: any = value.target.value;
+    setOrderValueType(order);
+    let sort: Array<String> = order.split(",");
+    console.log(sort[0], sort[1]);
+    console.log(params.entries.length > 0);
+    if (sort) {
+      console.log("ok, sort");
+      params.set("sort", sort.map((value) => `${value}`).join(","));
+      setParams(params);
+    }
+  };
+  const handleAddOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    let value: any = e.target.value;
+    setFilterOrderValue(value);
+    let filter: Array<String> = value.split(",");
+  };
   const handleView = () => {
     setIsVisible((prevValue) => !prevValue);
     setIsAnimate(false);
@@ -69,20 +120,20 @@ const EventsScreen = () => {
     setIsVisible(true);
   };
   useEffect(() => {
-    dispatch(initial(events));
-    setIsVisible(true);
     return () => {
       dispatch(resetMessage());
     };
   }, []);
+
   useEffect(() => {
-    if (isModifiqueEvents) {
-      setIsVisible(false);
-      getEvents();
-      dispatch(resetIsModified());
+    console.log(params.get("sort"));
+    let paramsAux = "";
+    let sort = params.get("sort") ? `&sort=${params.get("sort")}` : "";
+    if (Boolean(params.get("search"))) {
+      paramsAux = `search=${params.get("search")}${sort}`;
     }
-    return () => {};
-  }, [isModifiqueEvents]);
+    fetchData(paramsAux);
+  }, [params]);
 
   const getEvents = async () => {
     let aux_events = (await (
@@ -91,12 +142,68 @@ const EventsScreen = () => {
     dispatch(initial(aux_events));
   };
 
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (error !== "") {
+    return <h1>{error}</h1>;
+  }
   return (
     <>
       <BaseCalendar>
         <Flex justify={"flex-start"} width={"100%"} ref={componentWillUnmount}>
           <Container maxW="100%">
-            <FilterFormEvent />
+            {/* <InputGroup width={{ base: "100%", md: "50%" }}>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<Icon as={BiSearch} />}
+              />
+              <Input
+                type="search"
+                placeholder="Search"
+                value={params.get("search") || ""}
+                onChange={handleAddSearch}
+              />
+            </InputGroup>
+            <Select
+              onChange={handleAddSort}
+              width={{ base: "50%", md: "100%" }}
+              icon={<Icon as={BiSortAlt2} />}
+              fontSize={{ base: "10px", lg: "15px" }}
+              textTransform="capitalize"
+              value={orderValueType}
+            >
+              {orderValueType === "" && (
+                <option disabled value={""}>
+                  Sort
+                </option>
+              )}
+              {options_order.map((option) => (
+                <option key={option.label} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+            <Select
+              onChange={handleAddOrder}
+              width={{ base: "50%", md: "100%" }}
+              fontSize={{ base: "10px", lg: "15px" }}
+              icon={<Icon as={BiSortAlt2} />}
+              value={filterOrderValue}
+            >
+              {!filterOrderValue && (
+                <option disabled value={""}>
+                  Filter
+                </option>
+              )}
+
+              {options_filter.map((option) => (
+                <option key={option.label} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select> */}
             <IconButton
               display={{ base: "none", md: "flex" }}
               aria-label="view"
@@ -122,7 +229,7 @@ const EventsScreen = () => {
                     height={"auto"}
                     boxSizing="border-box"
                   >
-                    {eventsOrder.events.map((event) => (
+                    {data.map((event) => (
                       <Event
                         key={event.id}
                         event={event}

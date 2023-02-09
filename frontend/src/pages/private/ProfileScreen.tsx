@@ -1,12 +1,10 @@
-import { Button, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react";
+import { Button, Stack } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
 import BaseForn from "../../components/profileComponents/BaseForn";
-import { dataRegister } from "../../features/auth/dataForm";
 import { IValuesRegister } from "../../features/auth/validate";
 import { useAppSelector } from "../../app/hooks";
 import { Form, Formik, FormikHelpers, FormikState } from "formik";
 import { InputText } from "../../components/form/InputText";
-import InputCustom from "../../components/form/inputCustomEvent/InputCustom";
 import { dataFormPrivate } from "../../components/profileComponents/dataFormPrivate";
 
 export default function ProfileScreen(): JSX.Element {

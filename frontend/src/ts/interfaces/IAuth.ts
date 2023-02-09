@@ -11,3 +11,8 @@ export interface IBadRequest {
     msg: string;
   };
 }
+export interface IAuthMeResult{
+  ok: boolean,
+  msg: string,
+  user: IUser;
+}

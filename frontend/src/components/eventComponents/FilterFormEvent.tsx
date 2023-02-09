@@ -42,7 +42,8 @@ const options_order: IOption[] = [
   { label: orderBy.EVENTS_DATE_ASC, value: orderBy.EVENTS_DATE_ASC },
   { label: orderBy.EVENTS_DATE_DESC, value: orderBy.EVENTS_DATE_DESC },
 ];
-const FilterFormEvent = () => {
+interface IProps {}
+const FilterFormEvent = ({}: IProps) => {
   const dispatch = useAppDispatch();
   const { isModifiqueEvents } = useAppSelector((store) => store.eventsCalendar);
   const stateUserAuth = useAppSelector((store) => store.authState);
@@ -72,13 +73,13 @@ const FilterFormEvent = () => {
         flexDirection={{ base: "column", md: "row" }}
         gap={{ base: 1, md: 6 }}
       >
-        <InputGroup width={{ base: "100%", md: "50%" }}>
+        {/* <InputGroup width={{ base: "100%", md: "50%" }}>
           <InputLeftElement
             pointerEvents="none"
             children={<Icon as={BiSearch} />}
           />
           <Input type="search" placeholder="Search" />
-        </InputGroup>
+        </InputGroup> */}
         <Flex flexDirection={"row"} gap={2} width={{ base: "100%", md: "40%" }}>
           <Select
             onChange={handleFilter}

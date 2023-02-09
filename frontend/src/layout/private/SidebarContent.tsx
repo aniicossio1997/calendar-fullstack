@@ -28,7 +28,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const closeSesion = () => {
     dispatch(eventsClear());
     dispatch(logout());
-    navigate("/");
+    navigate("/calendar", { replace: true });
   };
   return (
     <Box

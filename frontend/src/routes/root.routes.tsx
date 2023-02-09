@@ -2,8 +2,7 @@ import { Suspense, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Layout from "../components/Layout";
 import { useState } from "react";
-import { authMe } from "../features/auth/authActions";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { publicDataRoutes } from "./public.routes";
 import PublicRoute from "./componentRoute/PublicRoute";
 import { privateDataRoutes } from "./private.routes";
@@ -14,6 +13,7 @@ import Landing from "../pages/Landing";
 import LoaderSpinner from "../components/spinner/LoaderSpinner";
 import useRoute from "./useRoute";
 import { LocalStorageService } from "../services/ServiceLocalStore";
+import HomeScreen from "../pages/private/HomeScreen";
 const AppRouter = () => {
   const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ const AppRouter = () => {
     if (!isExist) {
       LocalStorageService.setItem("isLogin", false);
     }
-    console.log(isExist);
+    //console.log(isExist);
   }, []);
 
   return (
@@ -36,10 +36,19 @@ const AppRouter = () => {
       {isWait && <LoaderSpinner />}
       <Suspense fallback={<LoaderSpinner />}>
         <Routes>
+          <Route path="/login" element={<Landing isAuth={isAuth} />} />
           {!isWait && (
             <>
-              <Route path="/" element={<Landing isAuth={isAuth} />} />
-              <Route path="/calendar" element={<LayoutWithNavbarSidebar />}>
+              <Route path="/login" element={<Landing isAuth={isAuth} />} />
+              <Route path="/" element={<LayoutWithNavbarSidebar />}>
+                <Route
+                  index
+                  element={
+                    <PrivateRoute setError={setError} isAuth={true}>
+                      <HomeScreen />
+                    </PrivateRoute>
+                  }
+                />
                 {privateDataRoutes.map((route) => (
                   <Route
                     key={route.to}

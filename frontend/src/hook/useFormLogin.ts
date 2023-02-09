@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { SwalAlertErrorSimple } from "../components/Alert/SwalAlert";
-import { authLogin, authMe } from "../features/auth/authActions";
+import { authLogin,  authMev2 } from "../features/auth/authActions";
 import { IValuesLogin } from "../features/auth/validate";
 import { retriveEventsOfUser } from "../features/calendar/eventsActions";
 import { resetMessage, showMessage } from "../features/ui/uiMessageSlice";
@@ -24,7 +24,6 @@ const useFormLogin = () => {
         nextState?: Partial<FormikState<IValuesLogin>> | undefined
       ) => void
     ) => {
-      console.log("Is Login before ", isLogin);
       setIsError(false);
       try {
         const data = await dispatch(authLogin(value)).unwrap();
@@ -33,14 +32,17 @@ const useFormLogin = () => {
           const data = (await response).data as IAuthResult;
           //console.log("por el service", data.user);
         } catch (error) {
-          console.log("por el service USTED NO ESTA AUTH");
+          //console.log("por el service USTED NO ESTA AUTH");
         }
         if (data.user.id) {
-          const authData = await dispatch(authMe()).unwrap();
+          const authData = await dispatch(authMev2());
           await dispatch(retriveEventsOfUser(data.user.id)).unwrap();
           //console.log("Dispacht", authData.user);
           //console.log("Is Login AFTER ", isLogin);
-          const idTime = setTimeout(() => navigate("/calendar"), 3000);
+          const idTime = setTimeout(
+            () => navigate("/", { replace: true }),
+            3000
+          );
           clearTimeout(idTime);
           // navigate("/calendar");
           //window.location.href = "/calendar";

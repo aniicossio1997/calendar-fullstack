@@ -20,6 +20,7 @@ interface IStateInitial {
   user: IUser;
   isLogin: boolean;
   messages: IMessage;
+  loading:boolean
 }
 const initialState: IStateInitial = {
   status: "idle",
@@ -30,6 +31,8 @@ const initialState: IStateInitial = {
   },
   isLogin: false,
   messages: initailMsg,
+  loading:true
+
 };
 
 const authSlice = createSlice({
@@ -46,10 +49,21 @@ const authSlice = createSlice({
         id: "",
       };
     },
-
+    startLoadingAuthMe(state: IStateInitial){
+      state.loading=true
+    },
+    finishLoadingAuthMe(state: IStateInitial){
+      state.loading=false
+    },
     resetMessage(state: IStateInitial) {
       state.messages = initailMsg;
     },
+    resetDataUser(state:IStateInitial, action ){
+      LocalStorageService.setItem("isLogin", true);
+      state.isLogin=true;
+      state.user=action.payload
+
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -79,23 +93,7 @@ const authSlice = createSlice({
         };
       })
       //authMe
-      .addCase(authMe.pending, (state, action) => {
-        state.status = "pending";
-        LocalStorageService.setItem("isLogin", false);
-        state.messages = {} as IMessage;
-      })
-      .addCase(authMe.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        LocalStorageService.setItem("isLogin", true);
-        state.isLogin = true;
-        state.user = (action.payload as IAuthResult).user;
-      })
-      .addCase(authMe.rejected, (state, action) => {
-        LocalStorageService.setItem("isLogin", false);
-        state.status = "failed";
-        state.user = { email: "", id: "", name: "" };
-        state.isLogin = false;
-      })
+     
       //register
       .addCase(userRegister.pending, (state, action) => {
         state.status = "pending";
@@ -124,6 +122,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout,resetDataUser,startLoadingAuthMe} = authSlice.actions;
 
 export default authSlice.reducer;

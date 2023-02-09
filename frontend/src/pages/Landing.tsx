@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 //import "../node_modules/react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { authMe } from "../features/auth/authActions";
 import { useNavigate } from "react-router-dom";
 import LoaderSpinner from "../components/spinner/LoaderSpinner";
 interface IProps {
@@ -12,7 +11,6 @@ interface IProps {
 const Landing = ({ isAuth }: IProps) => {
   const dispatch = useAppDispatch();
   const isStateLogin = useAppSelector((state) => state.authState.isLogin);
-  const [isWait, setIsWait] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     console.log(isStateLogin);
